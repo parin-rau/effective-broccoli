@@ -1,4 +1,5 @@
-type Kind = "project" | "task";
+/* eslint-disable no-mixed-spaces-and-tabs */
+export type Kind = "project" | "task";
 
 export type ItemMeta = {
 	id: string;
@@ -7,6 +8,7 @@ export type ItemMeta = {
 };
 
 type BaseContent = {
+	id: string;
 	title: string;
 	description?: string;
 };
@@ -23,14 +25,16 @@ export interface Task extends BaseContent {
 }
 
 export interface Project extends BaseContent {
-	tasks: Task[];
+	taskIds: string[];
 }
 
-export type ItemContent<T extends Kind> = T extends "project"
-	? Project[]
-	: Task[];
+// export type ItemContent<T extends Kind> = T extends "project"
+// 	? Project[]
+// 	: Task[];
 
-export type ItemData<T extends Kind> = {
+export type ItemData = {
 	meta: ItemMeta;
-	content: ItemContent<T>;
+	content:
+		| { task: Task; project?: never }
+		| { task?: never; project: Project };
 };
