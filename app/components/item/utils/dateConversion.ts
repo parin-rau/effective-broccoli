@@ -3,9 +3,14 @@ export const unixDiff = (date: Date, referenceDate?: Date) =>
 		(date.getTime() - (referenceDate?.getTime() ?? Date.now())) / 1000
 	);
 
-export const toTimestampString = (date: Date, referenceDate?: Date) => {
+export const toTimestampString = (
+	date: Date | string,
+	referenceDate?: Date
+) => {
+	const d: Date = typeof date === "string" ? new Date(date) : date;
+
 	const unixDiff = Math.floor(
-		(date.getTime() - (referenceDate?.getTime() ?? Date.now())) / 1000
+		(d.getTime() - (referenceDate?.getTime() ?? Date.now())) / 1000
 	);
 	const timeDisplay = (secondsPerUnit: number) =>
 		Math.floor(unixDiff / secondsPerUnit);
@@ -26,4 +31,4 @@ export const toTimestampString = (date: Date, referenceDate?: Date) => {
 	}
 };
 
-export const dateConversion = (d: Date) => toTimestampString(d);
+export const dateConversion = (d: Date | string) => toTimestampString(d);

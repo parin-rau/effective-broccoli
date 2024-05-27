@@ -3,7 +3,7 @@ export type Kind = "project" | "task";
 
 export type ItemMeta = {
 	id: string;
-	timestamp: Date;
+	timestamp: Date | string;
 	kind: Kind;
 };
 
