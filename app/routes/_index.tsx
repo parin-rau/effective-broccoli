@@ -1,12 +1,17 @@
 import type { MetaFunction } from "@remix-run/node";
+import BasicContainer from "~/components/container/BasicContainer";
+import Navbar from "~/components/navbar/Navbar";
 
 export const meta: MetaFunction = () => {
-	return [
-		{ title: "New Remix App" },
-		{ name: "description", content: "Welcome to Remix!" },
-	];
+	return [{ title: "Projects" }, { name: "app home", content: "app home" }];
 };
 
 export default function Index() {
-	return <div className="text-3xl font-bold underline">Hi Mom!</div>;
+	return (
+		<BasicContainer>
+			<Navbar />
+			<h1 className="font-bold">Hi Mom!</h1>
+			<h2 className="italic">Test test test</h2>
+		</BasicContainer>
+	);
 }

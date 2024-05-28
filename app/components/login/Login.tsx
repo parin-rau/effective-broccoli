@@ -1,12 +1,15 @@
+import { ReactNode } from "react";
 import FancyInput from "../ui/FancyInput";
+import { Form } from "@remix-run/react";
 
 type Props = {
 	isSignup?: boolean;
+	children: ReactNode;
 };
 
-export default function Login({ isSignup }: Props) {
+export default function Login({ isSignup, children }: Props) {
 	return (
-		<div>
+		<Form>
 			<FancyInput />
 			<FancyInput />
 			{isSignup && (
@@ -15,6 +18,7 @@ export default function Login({ isSignup }: Props) {
 					<FancyInput />
 				</>
 			)}
-		</div>
+			{children}
+		</Form>
 	);
 }
