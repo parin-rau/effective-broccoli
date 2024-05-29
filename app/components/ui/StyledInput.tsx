@@ -3,22 +3,16 @@ type Props = {
 	value: string;
 	onChange: (...args: unknown[]) => unknown;
 	placeholder?: string;
+	name: string;
+	required?: boolean;
 };
 
-export default function StyledInput({
-	type,
-	value,
-	onChange,
-	placeholder,
-}: Props) {
+export default function StyledInput(props: Props) {
 	return (
 		<input
 			{...{
 				className: "p-2 border border-neutral-500 rounded-md",
-				type,
-				value,
-				onChange,
-				placeholder,
+				...props,
 			}}
 		/>
 	);

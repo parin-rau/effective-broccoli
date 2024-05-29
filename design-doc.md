@@ -29,3 +29,11 @@
 -   Nginx
 -   RPi
 -   Free online hosting (?)
+
+## Notes
+
+### Progress Tracking
+
+-   Check status of subtask/task to calculate project progress
+-   Backend calculations
+-   Flag/sort by progress amount

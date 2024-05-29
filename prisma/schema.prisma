@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId String @unique @id
+  username String @unique
+  password String
+}
+
+model Project {
+  projectId String @unique @id
+  userId String
+  title String
+  description String?
+  progress Int @default(0)
+  externalLink String?
+}
+
+model Task {
+  taskId String @unique @id
+  userId String
+  projectId String
+  title String
+  description String?
+  progress Int @default(0)
+  externalLink String?
+}
+
+model Subtask {
+  subtaskId String @unique @id
+  userId String
+  projectId String
+  taskId String
+  title String
+  description String?
+  progress Int @default(0)
+  externalLink String?
+}

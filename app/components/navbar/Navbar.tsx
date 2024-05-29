@@ -1,30 +1,5 @@
-import { Link, useLocation } from "@remix-run/react";
 import BasicContainer from "../container/BasicContainer";
-import { pathnameMatch } from "./utils/pathnameMatch";
-
-type LinkProps = {
-	to: string;
-	text: string;
-};
-
-function NavbarLink({ to, text }: LinkProps) {
-	const { pathname } = useLocation();
-	const isCurrentLocation = pathnameMatch(pathname, to);
-
-	return (
-		<Link
-			to={to}
-			className={
-				"p-2 w-fit rounded-lg " +
-				(isCurrentLocation
-					? "bg-neutral-200 hover:bg-neutral-300"
-					: "hover:bg-neutral-200")
-			}
-		>
-			{text}
-		</Link>
-	);
-}
+import NavbarLink from "./NavbarLink";
 
 export default function Navbar() {
 	return (
