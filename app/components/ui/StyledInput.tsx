@@ -1,5 +1,5 @@
 type Props = {
-	type: React.HTMLInputTypeAttribute;
+	type: React.HTMLInputTypeAttribute | "textarea";
 	value: string;
 	onChange: (...args: unknown[]) => unknown;
 	placeholder?: string;
@@ -8,8 +8,15 @@ type Props = {
 };
 
 export default function StyledInput(props: Props) {
-	return (
+	return props.type !== "textarea" ? (
 		<input
+			{...{
+				className: "p-2 border border-neutral-500 rounded-md",
+				...props,
+			}}
+		/>
+	) : (
+		<textarea
 			{...{
 				className: "p-2 border border-neutral-500 rounded-md",
 				...props,

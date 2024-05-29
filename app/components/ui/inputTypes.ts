@@ -7,4 +7,4 @@ export type InputProps = {
 	required?: boolean;
 };
 
-export type SpecializedInputProps = Omit<InputProps, "type">;
+export type StyledInputProps = Omit<InputProps, "type">;

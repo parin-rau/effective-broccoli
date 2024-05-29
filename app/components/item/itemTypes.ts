@@ -1,40 +1,41 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
-export type Kind = "project" | "task";
-
-export type ItemMeta = {
-	id: string;
-	timestamp: Date | string;
-	kind: Kind;
-};
-
-type BaseContent = {
+export type ItemHeader = {
 	id: string;
 	title: string;
 	description?: string;
+	timestamp: number;
+};
+
+export type Project = {
+	projectId: string;
+	userId: string;
+	title: string;
+	description?: string;
+	progress: number;
+	externalLink?: string;
+	timestamp: number;
+	tasks: Task[];
+};
+
+export type Task = {
+	taskId: string;
+	userId: string;
+	projectId: string;
+	title: string;
+	description?: string;
+	progress: number;
+	externalLink?: string;
+	timestamp: number;
+	subtasks: Subtask[];
 };
 
 export type Subtask = {
-	id: string;
+	subtaskId: string;
+	userId: string;
+	taskId: string;
+	projectId: string;
 	title: string;
-	status: number;
-};
-
-export interface Task extends BaseContent {
-	status: number;
-	subtasks: Subtask[];
-}
-
-export interface Project extends BaseContent {
-	taskIds: string[];
-}
-
-// export type ItemContent<T extends Kind> = T extends "project"
-// 	? Project[]
-// 	: Task[];
-
-export type ItemData = {
-	meta: ItemMeta;
-	content:
-		| { task: Task; project?: never }
-		| { task?: never; project: Project };
+	description?: string;
+	progress: number;
+	externalLink?: string;
+	timestamp: number;
 };

@@ -1,6 +1,6 @@
 import StyledInput from "./StyledInput";
-import { SpecializedInputProps } from "./inputTypes";
+import { StyledInputProps } from "./inputTypes";
 
-export default function PasswordInput(props: SpecializedInputProps) {
+export default function PasswordInput(props: StyledInputProps) {
 	return <StyledInput {...{ ...props, type: "password" }} />;
 }

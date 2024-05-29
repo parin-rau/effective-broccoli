@@ -18,7 +18,7 @@ type Props = {
 export default function StyledButton({ onClick, children, type }: Props) {
 	return (
 		<button
-			className="p-2 text-neutral-100 font-semibold bg-blue-600 hover:bg-blue-400 rounded-lg"
+			className="p-2 text-neutral-100 font-semibold bg-blue-500 hover:bg-blue-600 active:bg-blue-700 rounded-lg"
 			onClick={onClick}
 			type={onclick ? type : "submit"}
 		>

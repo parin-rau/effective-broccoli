@@ -14,6 +14,7 @@ model User {
   userId String @unique @id
   username String @unique
   password String
+  timestamp Int
 }
 
 model Project {
@@ -23,6 +24,7 @@ model Project {
   description String?
   progress Int @default(0)
   externalLink String?
+  timestamp Int
 }
 
 model Task {
@@ -33,6 +35,7 @@ model Task {
   description String?
   progress Int @default(0)
   externalLink String?
+  timestamp Int
 }
 
 model Subtask {
@@ -44,4 +47,5 @@ model Subtask {
   description String?
   progress Int @default(0)
   externalLink String?
+  timestamp Int
 }
