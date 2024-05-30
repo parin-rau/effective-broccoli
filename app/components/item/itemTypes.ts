@@ -39,3 +39,21 @@ export type Subtask = {
 	externalLink?: string;
 	timestamp: number;
 };
+
+type Completion = {
+	completed: number;
+	total: number;
+	progressPercent: string;
+	progressDecimal: number;
+	childBarStyles: React.CSSProperties;
+	uom: string;
+};
+
+export type ProjectCompletion = {
+	taskCompletion: Completion;
+	subtaskCompletion: Completion;
+};
+
+export type TaskCompletion = {
+	subtaskCompletion: Completion;
+};

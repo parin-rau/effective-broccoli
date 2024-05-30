@@ -5,6 +5,7 @@ export type InputProps = {
 	placeholder?: string;
 	name: string;
 	required?: boolean;
+	label?: string;
 };
 
 export type StyledInputProps = Omit<InputProps, "type">;

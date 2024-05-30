@@ -16,8 +16,8 @@ export default function NavbarLink({ to, text }: Props) {
 			className={
 				"p-2 w-fit rounded-lg " +
 				(isCurrentLocation
-					? "bg-neutral-200 hover:bg-neutral-300"
-					: "hover:bg-neutral-200")
+					? "bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-400"
+					: "hover:bg-neutral-200 active:bg-neutral-300")
 			}
 		>
 			{text}

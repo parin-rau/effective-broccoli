@@ -4,10 +4,13 @@ export const unixDiff = (date: Date, referenceDate?: Date) =>
 	);
 
 export const toTimestampString = (
-	date: Date | string,
+	date: Date | string | number,
 	referenceDate?: Date
 ) => {
-	const d: Date = typeof date === "string" ? new Date(date) : date;
+	const d: Date =
+		typeof date === "string" || typeof date === "number"
+			? new Date(date)
+			: date;
 
 	const unixDiff = Math.floor(
 		(d.getTime() - (referenceDate?.getTime() ?? Date.now())) / 1000
@@ -31,4 +34,5 @@ export const toTimestampString = (
 	}
 };
 
-export const dateConversion = (d: Date | string) => toTimestampString(d);
+export const dateConversion = (d: Date | string | number) =>
+	toTimestampString(d);
