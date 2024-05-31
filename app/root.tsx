@@ -15,7 +15,10 @@ export const links: LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
+		<html
+			className="bg-neutral-100 dark:bg-neutral-950 dark:text-neutral-200"
+			lang="en"
+		>
 			<head>
 				<meta charSet="utf-8" />
 				<meta
