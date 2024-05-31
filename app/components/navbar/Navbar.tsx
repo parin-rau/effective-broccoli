@@ -1,4 +1,6 @@
 import BasicContainer from "../container/BasicContainer";
+import DarkModeToggle from "./DarkModeToggle";
+import LogoutButton from "./LogoutButton";
 import NavbarLink from "./NavbarLink";
 
 export default function Navbar() {
@@ -8,7 +10,8 @@ export default function Navbar() {
 			<NavbarLink text="Projects" to="/projects" />
 			<NavbarLink text="Tasks" to="/tasks" />
 			<NavbarLink text="User" to="/user" />
-			<NavbarLink text="Log Out" to="/logout" />
+			<DarkModeToggle />
+			<LogoutButton />
 		</BasicContainer>
 	);
 }

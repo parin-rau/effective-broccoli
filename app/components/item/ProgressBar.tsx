@@ -15,12 +15,15 @@ export default function ProgressBar({
 	uom,
 }: Props) {
 	return (
-		<div className="flex gap-2">
+		<div className="flex flex-col gap-2">
 			<span>
 				{progressPercent} - {completed}/{total} {uom}
 			</span>
-			<div>
-				<div style={childBarStyles}></div>
+			<div className="rounded-full border border-neutral-200 bg-neutral-200 dark:bg-neutral-700 dark:border-none">
+				<div
+					className={`h-full rounded-full p-1 ${childBarStyles.backgroundColor}`}
+					style={childBarStyles}
+				></div>
 			</div>
 		</div>
 	);

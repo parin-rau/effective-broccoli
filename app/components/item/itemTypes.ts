@@ -5,12 +5,13 @@ export type ItemHeader = {
 	timestamp: number;
 };
 
+export type StatusMessage = "Not Started" | "In Progress" | "Completed";
+
 export type Project = {
 	projectId: string;
 	userId: string;
 	title: string;
 	description?: string;
-	progress: number;
 	externalLink?: string;
 	timestamp: number;
 	tasks: Task[];
@@ -22,7 +23,6 @@ export type Task = {
 	projectId: string;
 	title: string;
 	description?: string;
-	progress: number;
 	externalLink?: string;
 	timestamp: number;
 	subtasks: Subtask[];
@@ -35,7 +35,6 @@ export type Subtask = {
 	projectId: string;
 	title: string;
 	description?: string;
-	progress: number;
 	externalLink?: string;
 	timestamp: number;
 };
@@ -46,14 +45,20 @@ type Completion = {
 	progressPercent: string;
 	progressDecimal: number;
 	childBarStyles: React.CSSProperties;
-	uom: string;
+	uom?: string;
 };
 
 export type ProjectCompletion = {
 	taskCompletion: Completion;
 	subtaskCompletion: Completion;
+	message: StatusMessage;
 };
 
 export type TaskCompletion = {
 	subtaskCompletion: Completion;
+	message: StatusMessage;
+};
+
+export type ProjectWithProgressProps = Project & {
+	progress: ProjectCompletion;
 };

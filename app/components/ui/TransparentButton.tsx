@@ -1,5 +1,5 @@
 type Props = {
-	onClick: () => void;
+	onClick?: () => void;
 	children: React.ReactNode;
 	styles?: string;
 };
@@ -12,9 +12,9 @@ export default function TransparentButton({
 	return (
 		<button
 			onClick={onClick}
-			type="button"
+			type={onClick ? "submit" : "button"}
 			className={
-				"p-2 bg-transparent hover:bg-neutral-200 active:bg-neutral-300 rounded-lg " +
+				"w-fit p-2 bg-transparent hover:bg-neutral-200 active:bg-neutral-300 rounded-lg" +
 				(styles ?? "")
 			}
 		>

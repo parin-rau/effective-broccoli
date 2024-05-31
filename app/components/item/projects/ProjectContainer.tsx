@@ -1,12 +1,12 @@
 import GridContainer from "~/components/container/GridContainer";
-import { Project } from "../itemTypes";
+import { ProjectWithProgressProps } from "../itemTypes";
 import ProjectCard from "./ProjectCard";
 import BorderContainer from "~/components/container/BorderContainer";
 import ProjectEditor from "../editor/ProjectEditor";
 import { useState } from "react";
 
 type Props = {
-	projects: Project[];
+	projects: ProjectWithProgressProps[];
 };
 
 export default function ProjectContainer({ projects }: Props) {

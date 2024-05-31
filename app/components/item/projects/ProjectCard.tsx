@@ -1,12 +1,16 @@
 import BorderContainer from "~/components/container/BorderContainer";
 import ItemHeader from "../ItemHeader";
-import { Project, ProjectCompletion } from "../itemTypes";
+import { ProjectWithProgressProps } from "../itemTypes";
 import ProgressBar from "../ProgressBar";
 
-export default function ProjectCard(
-	{ projectId, userId, title, description, timestamp }: Project,
-	progressProps: ProjectCompletion
-) {
+export default function ProjectCard({
+	projectId,
+	userId,
+	title,
+	description,
+	timestamp,
+	progress,
+}: ProjectWithProgressProps) {
 	const headerProps = {
 		id: projectId,
 		userId,
@@ -18,11 +22,9 @@ export default function ProjectCard(
 	return (
 		<BorderContainer>
 			<ItemHeader {...{ ...headerProps }} />
+			<ProgressBar {...{ ...progress.taskCompletion, uom: "Tasks" }} />
 			<ProgressBar
-				{...{ ...progressProps.taskCompletion, uom: "Tasks" }}
-			/>
-			<ProgressBar
-				{...{ ...progressProps.subtaskCompletion, uom: "Subtasks" }}
+				{...{ ...progress.subtaskCompletion, uom: "Subtasks" }}
 			/>
 		</BorderContainer>
 	);
