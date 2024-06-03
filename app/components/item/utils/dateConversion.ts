@@ -1,38 +1,61 @@
-export const unixDiff = (date: Date, referenceDate?: Date) =>
+type TimeUnit = "minute" | "hour" | "day" | "month" | "year";
+
+export const getUnixDiff = (date: Date, referenceDate?: Date) =>
 	Math.floor(
-		(date.getTime() - (referenceDate?.getTime() ?? Date.now())) / 1000
+		((referenceDate?.getTime() ?? Date.now()) - date.getTime()) / 1000
 	);
+
+const secondsPer = {
+	minute: 60,
+	hour: 60 * 60,
+	day: 60 * 60 * 24,
+	month: 60 * 60 * 24 * 30,
+	year: 60 * 60 * 24 * 365,
+};
 
 export const toTimestampString = (
 	date: Date | string | number,
 	referenceDate?: Date
 ) => {
+	let message: string;
 	const d: Date =
 		typeof date === "string" || typeof date === "number"
 			? new Date(date)
 			: date;
-
-	const unixDiff = Math.floor(
-		(d.getTime() - (referenceDate?.getTime() ?? Date.now())) / 1000
-	);
-	const timeDisplay = (secondsPerUnit: number) =>
-		Math.floor(unixDiff / secondsPerUnit);
+	const unixDiff = getUnixDiff(d, referenceDate);
+	const getTimeMessage = (timeUnit: TimeUnit) => {
+		const secondsPerUnit = secondsPer[timeUnit];
+		const num = Math.floor(unixDiff / secondsPerUnit);
+		const unit = num === 1 ? timeUnit : `${timeUnit}s`;
+		return `${num} ${unit} ago`;
+	};
 
 	switch (true) {
-		case unixDiff < 60:
-			return "Just now";
-		case unixDiff < 60 * 60:
-			return `${timeDisplay(60)} minutes ago`;
-		case unixDiff < 60 * 60 * 24:
-			return `${timeDisplay(60 * 60)} hours ago`;
-		case unixDiff < 60 * 60 * 24 * 30:
-			return `${timeDisplay(60 * 60 * 24)} days ago`;
-		case unixDiff < 60 * 60 * 24 * 365:
-			return `${timeDisplay(60 * 60 * 24 * 30)} months ago`;
+		case unixDiff < 0:
+			message = "Invalid timestamp";
+			break;
+		case unixDiff < secondsPer.minute:
+			message = "Just now";
+			break;
+		case unixDiff < secondsPer.hour:
+			message = getTimeMessage("minute");
+			break;
+		case unixDiff < secondsPer.day:
+			message = getTimeMessage("hour");
+			break;
+		case unixDiff < secondsPer.month:
+			message = getTimeMessage("day");
+			break;
+		case unixDiff < secondsPer.year:
+			message = getTimeMessage("month");
+			break;
+		case unixDiff >= secondsPer.year:
+			message = getTimeMessage("year");
+			break;
 		default:
-			return `${timeDisplay(60 * 60 * 24 * 365)} years ago`;
+			message = "Invalid timestamp";
+			break;
 	}
-};
 
-export const dateConversion = (d: Date | string | number) =>
-	toTimestampString(d);
+	return message;
+};

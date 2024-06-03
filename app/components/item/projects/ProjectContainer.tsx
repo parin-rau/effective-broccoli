@@ -1,9 +1,9 @@
 import GridContainer from "~/components/container/GridContainer";
 import { ProjectWithProgressProps } from "../itemTypes";
 import ProjectCard from "./ProjectCard";
-import BorderContainer from "~/components/container/BorderContainer";
 import ProjectEditor from "../editor/ProjectEditor";
 import { useState } from "react";
+import BasicContainer from "~/components/container/BasicContainer";
 
 type Props = {
 	projects: ProjectWithProgressProps[];
@@ -14,13 +14,13 @@ export default function ProjectContainer({ projects }: Props) {
 	const toggleShowEditor = () => setShowEditor((prev) => !prev);
 
 	return (
-		<BorderContainer>
+		<BasicContainer>
 			<ProjectEditor {...{ showEditor, toggleShowEditor }} />
 			<GridContainer>
 				{projects.map((p) => (
 					<ProjectCard key={p.projectId} {...p} />
 				))}
 			</GridContainer>
-		</BorderContainer>
+		</BasicContainer>
 	);
 }

@@ -7,14 +7,16 @@ export default function StyledInput(props: InputProps) {
 			{props.type !== "textarea" ? (
 				<input
 					{...{
-						className: "p-2 border border-neutral-500 rounded-md",
+						className:
+							"p-2 border border-neutral-500 dark:border-netural-800 rounded-md bg-neutral-100 dark:bg-neutral-900",
 						...props,
 					}}
 				/>
 			) : (
 				<textarea
 					{...{
-						className: "p-2 border border-neutral-500 rounded-md",
+						className:
+							"p-2 border border-neutral-500 dark:border-netural-800 rounded-md bg-neutral-100 dark:bg-neutral-900",
 						...props,
 					}}
 				/>

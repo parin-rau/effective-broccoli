@@ -8,7 +8,7 @@ export async function action({ request }: ActionFunctionArgs) {}
 export default function LogoutButton() {
 	return (
 		<Form>
-			<TransparentButton>
+			<TransparentButton fullWidth>
 				<div className="flex gap-2">
 					<LogoutIcon />
 					<span>Log Out</span>

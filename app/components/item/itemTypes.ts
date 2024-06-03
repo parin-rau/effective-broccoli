@@ -2,7 +2,7 @@ export type ItemHeader = {
 	id: string;
 	title: string;
 	description?: string;
-	timestamp: number;
+	timestamp: number | string;
 };
 
 export type StatusMessage = "Not Started" | "In Progress" | "Completed";

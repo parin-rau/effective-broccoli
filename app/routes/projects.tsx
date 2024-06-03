@@ -13,7 +13,7 @@ export function loader() {
 			userId: "1",
 			tasks: [],
 			projectId: "1",
-			timestamp: 0,
+			timestamp: 1716188400000,
 			progress: {
 				message: "Not Started",
 				taskCompletion: {
@@ -33,7 +33,7 @@ export function loader() {
 			userId: "1",
 			tasks: [],
 			projectId: "2",
-			timestamp: 0,
+			timestamp: 1717449553585,
 			progress: {
 				message: "In Progress",
 				taskCompletion: {
@@ -49,11 +49,11 @@ export function loader() {
 			},
 		},
 		{
-			title: "Project 2",
+			title: "Project 3",
 			userId: "1",
 			tasks: [],
 			projectId: "3",
-			timestamp: 0,
+			timestamp: 1709366400000,
 			progress: {
 				message: "Completed",
 				taskCompletion: {

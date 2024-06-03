@@ -14,10 +14,10 @@ export default function NavbarLink({ to, text }: Props) {
 		<Link
 			to={to}
 			className={
-				"p-2 w-fit rounded-lg " +
+				"p-2 w-full rounded-lg " +
 				(isCurrentLocation
-					? "bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-400"
-					: "hover:bg-neutral-200 active:bg-neutral-300")
+					? "bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-400 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:active:bg-neutral-600"
+					: "hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-800 dark:active:bg-neutral-700")
 			}
 		>
 			{text}

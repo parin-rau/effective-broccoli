@@ -38,11 +38,16 @@ const toggleTheme = (
 	}
 };
 
+const initTheme = new Theme().theme;
+
 export default function DarkModeToggle() {
-	const [theme, setTheme] = useState<string | null>(new Theme().theme);
+	const [theme, setTheme] = useState<string | null>(initTheme);
 
 	return (
-		<TransparentButton onClick={() => toggleTheme(theme, setTheme)}>
+		<TransparentButton
+			fullWidth
+			onClick={() => toggleTheme(theme, setTheme)}
+		>
 			<div className="w-fit">{theme === "dark" ? <Moon /> : <Sun />}</div>
 		</TransparentButton>
 	);
