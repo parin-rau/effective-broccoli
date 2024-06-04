@@ -18,7 +18,7 @@ export const sessionStorage = createCookieSessionStorage<
 		path: "/",
 		httpOnly: true,
 		secrets: [""],
-		secure: process.env.NODE_ENV === "production",
+		secure: true,
 	},
 });
 

@@ -1,32 +1,15 @@
-import { useReducer } from "react";
-import { Form, Link } from "@remix-run/react";
+import { Form, Link, useActionData } from "@remix-run/react";
 import PasswordInput from "../components/ui/PasswordInput";
 import TextInput from "../components/ui/TextInput";
-import {
-	ActionFunctionArgs,
-	LoaderFunctionArgs,
-	json,
-	redirect,
-} from "@remix-run/node";
-import { getSession, commitSession } from "~/sessions";
+import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import BorderContainer from "../components/container/BorderContainer";
-import { validateCredentials } from "~/services/auth.server";
 import StyledButton from "~/components/ui/StyledButton";
-
-class LoginForm {
-	username: string;
-	password: string;
-
-	constructor() {
-		this.username = "";
-		this.password = "";
-	}
-}
-
-type Action = {
-	type: string;
-	value: string;
-};
+import BasicContainer from "~/components/container/BasicContainer";
+import CenteredContainer from "~/components/container/CenteredContainer";
+import { validateLogin } from "~/utils/validate";
+import { authCookie } from "~/auth";
+import { loginUser } from "~/utils/queries";
+import ErrorMessage from "~/components/ui/errorMessage";
 
 // export async function loader({ request }: LoaderFunctionArgs) {
 // 	const session = await getSession(request.headers.get("Cookie"));
@@ -44,67 +27,61 @@ type Action = {
 // 	});
 // }
 
-// export async function action({ request }: ActionFunctionArgs) {
-// 	const session = await getSession(request.headers.get("Cookie"));
-// 	const form = await request.formData();
-// 	const username = form.get("username");
-// 	const password = form.get("password");
+export const action = async ({ request }: ActionFunctionArgs) => {
+	const formData = await request.formData();
+	const username = String(formData.get("username"));
+	const password = String(formData.get("password"));
+	const passwordConfirm = String(formData.get("passwordConfirm"));
 
-// 	const userId = await validateCredentials(username, password);
-
-// 	if (userId == null) {
-// 		session.flash("error", "Invalid username/password");
-// 		return redirect("/login", {
-// 			headers: {
-// 				"Set-Cookie": await commitSession(session),
-// 			},
-// 		});
-// 	}
-// }
-
-function reducer(state: LoginForm, action: Action) {
-	if (action.type === "username" || action.type === "password") {
-		return { ...state, [action.type]: action.value };
+	const errors = await validateLogin(password, passwordConfirm);
+	if (errors) {
+		return { errors };
 	}
-	throw Error("Unknown action.");
-}
+
+	const user = await loginUser(username, password);
+	return redirect("/", {
+		headers: {
+			"Set-Cookie": await authCookie.serialize(user.id),
+		},
+	});
+};
 
 export default function Login() {
-	const [state, dispatch] = useReducer(reducer, new LoginForm());
-
-	const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-		dispatch({ type: e.target.name, value: e.target.value });
-
-	// const [state, setState] = useState<LoginForm>(new LoginForm());
-	// const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	const { name, value } = e.target;
-	// 	setState((p) => ({ ...p, [name]: value }));
-	// };
+	const actionData = useActionData<typeof action>();
+	const usernameError = actionData?.errors?.username;
+	const passwordError = actionData?.errors?.password;
 
 	return (
-		<Form method="post" action="/login">
-			<div className="container grid place-items-center w-full">
-				<BorderContainer>
-					<h2>Log In</h2>
-					<TextInput
-						name="username"
-						placeholder="Username"
-						value={state.username}
-						onChange={onChange}
-						required
-					/>
-					<PasswordInput
-						name="password"
-						placeholder="Password"
-						value={state.password}
-						onChange={onChange}
-					/>
-					<StyledButton>Log In</StyledButton>
+		<Form method="post" className="w-full">
+			<CenteredContainer>
+				<BorderContainer largeGap dynamicSizing>
+					<h2 className="font-bold text-2xl">Log In</h2>
+					<BasicContainer styles="px-0">
+						{usernameError && (
+							<ErrorMessage message={usernameError} />
+						)}
+						<TextInput
+							name="username"
+							label="Username"
+							placeholder="Enter Username"
+							required
+						/>
+						{passwordError && (
+							<ErrorMessage message={passwordError} />
+						)}
+						<PasswordInput
+							name="password"
+							label="Password"
+							placeholder="Enter Password"
+							required
+						/>
+					</BasicContainer>
+					<StyledButton fullWidth>Log In</StyledButton>
 					<Link to="/signup" className="hover:underline">
-						New user? Create an account.
+						Register new user
 					</Link>
 				</BorderContainer>
-			</div>
+			</CenteredContainer>
 		</Form>
 	);
 }

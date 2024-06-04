@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
-import TransparentButton from "../ui/TransparentButton";
+import TransparentButton from "~/components/ui/TransparentButton";
 import LogoutIcon from "~/assets/LogoutIcon";
 import { destroySession, getSession } from "~/sessions";
 

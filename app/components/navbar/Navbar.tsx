@@ -1,6 +1,6 @@
 import BasicContainer from "../container/BasicContainer";
 import DarkModeToggle from "./DarkModeToggle";
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "~/routes/logout";
 import NavbarLink from "./NavbarLink";
 
 export default function Navbar() {

@@ -4,9 +4,10 @@ import { pathnameMatch } from "./utils/pathnameMatch";
 type Props = {
 	to: string;
 	text: string;
+	children?: React.ReactNode;
 };
 
-export default function NavbarLink({ to, text }: Props) {
+export default function NavbarLink({ to, text, children }: Props) {
 	const { pathname } = useLocation();
 	const isCurrentLocation = pathnameMatch(pathname, to);
 
@@ -20,7 +21,14 @@ export default function NavbarLink({ to, text }: Props) {
 					: "hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-800 dark:active:bg-neutral-700")
 			}
 		>
-			{text}
+			{children ? (
+				<div className="flex gap-2">
+					{children}
+					<span>{text}</span>
+				</div>
+			) : (
+				text
+			)}
 		</Link>
 	);
 }

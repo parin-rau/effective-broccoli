@@ -1,27 +1,10 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
-type Children = React.ReactNode;
-type ButtonType = React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
-type OnClick = (...args: unknown[]) => unknown;
-
-// type Props = {
-// 	onClick?: (...args: unknown[]) => unknown;
-// 	children: React.ReactNode;
-// 	type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
-// };
-
 type Props = {
-	onClick?: OnClick;
-	children: Children;
-	type?: ButtonType;
+	onClick?: (...args: unknown[]) => unknown;
+	children: React.ReactNode;
 	fullWidth?: boolean;
 };
 
-export default function StyledButton({
-	onClick,
-	children,
-	type,
-	fullWidth,
-}: Props) {
+export default function StyledButton({ children, fullWidth, onClick }: Props) {
 	return (
 		<button
 			className={
@@ -29,7 +12,7 @@ export default function StyledButton({
 				(fullWidth ? "w-full" : "w-fit")
 			}
 			onClick={onClick}
-			type={onclick ? type : "submit"}
+			type={onClick ? "button" : "submit"}
 		>
 			{children}
 		</button>

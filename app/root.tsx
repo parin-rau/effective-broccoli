@@ -4,19 +4,32 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	useLoaderData,
 	useLocation,
 } from "@remix-run/react";
-
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import stylesheet from "~/tailwind.css?url";
 import MainLayout from "./layouts/MainLayout";
+import { authCookie } from "./auth";
 
 export const links: LinksFunction = () => [
 	{ rel: "stylesheet", href: stylesheet },
 ];
 
+const pathsOutsideMainLayout = ["/login", "/signup"];
+
+export const loader = async ({
+	request,
+}: LoaderFunctionArgs): Promise<{ userId?: string }> => {
+	const cookie = request.headers.get("Cookie");
+	const userId = await authCookie.parse(cookie);
+	return { userId };
+};
+
 export function Layout({ children }: { children: React.ReactNode }) {
+	const userId = useLoaderData<typeof loader>();
 	const { pathname } = useLocation();
+	const isOutsideMainLayout = pathsOutsideMainLayout.includes(pathname);
 
 	if (typeof window !== "object") {
 		console.log("server rendered");
@@ -42,7 +55,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 			</head>
 			<body className="bg-neutral-100 dark:bg-neutral-950 dark:text-neutral-200">
-				{pathname === "/login" ? children : <MainLayout />}
+				{isOutsideMainLayout ? children : <MainLayout />}
 				<ScrollRestoration />
 				<Scripts />
 			</body>
