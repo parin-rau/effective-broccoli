@@ -11,22 +11,6 @@ import { authCookie } from "~/auth";
 import { loginUser } from "~/queries/users.server";
 import ErrorMessage from "~/components/ui/errorMessage";
 
-// export async function loader({ request }: LoaderFunctionArgs) {
-// 	const session = await getSession(request.headers.get("Cookie"));
-
-// 	if (sessionStorage.has("userId")) {
-// 		return redirect("/");
-// 	}
-
-// 	const data = { error: session.get("error") };
-
-// 	return json(data, {
-// 		headers: {
-// 			"Set-Cookie": await commitSession(session),
-// 		},
-// 	});
-// }
-
 export const action = async ({ request }: ActionFunctionArgs) => {
 	const formData = await request.formData();
 	const username = String(formData.get("username"));
@@ -38,7 +22,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		return { errors };
 	}
 
-	const user = await loginUser(username, password);
+	const res = await loginUser(username, password);
+	const user = await res.json();
 	if (user.errors) {
 		return { errors: user.errors };
 	}

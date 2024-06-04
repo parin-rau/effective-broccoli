@@ -22,7 +22,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		return { errors };
 	}
 
-	const { userId } = await createUser(username, password);
+	const res = await createUser(username, password);
+	const { userId } = await res.json();
 	return redirect("/", {
 		headers: {
 			"Set-Cookie": await authCookie.serialize(userId),

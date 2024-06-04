@@ -1,6 +1,7 @@
 import { PrismaClient, User } from "@prisma/client";
 import { createHash, compareHash } from "../utils/hash";
 import crypto from "crypto";
+import { json } from "@remix-run/node";
 
 const prisma = new PrismaClient();
 
@@ -10,7 +11,8 @@ export const userExists = async (username: string) => {
 		select: { userId: true },
 	});
 
-	return Boolean(user);
+	const exists = Boolean(user);
+	return json({ exists }, exists ? 200 : 400);
 };
 
 export const createUser = async (username: string, password: string) => {
@@ -24,7 +26,7 @@ export const createUser = async (username: string, password: string) => {
 			timestamp: Date.now(),
 		},
 	});
-	return { userId: user.userId };
+	return json({ userId: user.userId }, 200);
 };
 
 export const loginUser = async (username: string, password: string) => {
@@ -34,15 +36,31 @@ export const loginUser = async (username: string, password: string) => {
 	});
 
 	if (!user || !user.password || !user.passwordSalt) {
-		return {
-			errors: { username: "Incorrect username/password", password: "" },
-		};
+		return json(
+			{
+				errors: {
+					username: "Incorrect username/password",
+					password: "",
+				},
+				userId: null,
+			},
+			400
+		);
 	}
 
 	const isPassMatch = compareHash(user.password, password, user.passwordSalt);
 	return isPassMatch
-		? { userId: user.userId }
-		: { errors: { username: "Incorrect username/password", password: "" } };
+		? json({ errors: null, userId: user.userId }, 200)
+		: json(
+				{
+					errors: {
+						username: "Incorrect username/password",
+						password: null,
+					},
+					userId: null,
+				},
+				400
+		  );
 };
 
 export const updateUser = async (userId: string, data: Partial<User>) => {

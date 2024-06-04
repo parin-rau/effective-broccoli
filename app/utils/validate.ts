@@ -9,8 +9,12 @@ export const validateSignup = async (
 
 	if (!username) {
 		errors.username = "Username is required";
-	} else if (await userExists(username)) {
-		errors.username = "An account with this username already exists";
+	} else {
+		const res = await userExists(username);
+		const { exists } = await res.json();
+		if (exists) {
+			errors.username = "An account with this username already exists";
+		}
 	}
 
 	if (!password || !passwordConfirm) {
