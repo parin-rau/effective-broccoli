@@ -8,7 +8,7 @@ import BasicContainer from "~/components/container/BasicContainer";
 import CenteredContainer from "~/components/container/CenteredContainer";
 import { validateLogin } from "~/utils/validate";
 import { authCookie } from "~/auth";
-import { loginUser } from "~/utils/queries";
+import { loginUser } from "~/queries/users.server";
 import ErrorMessage from "~/components/ui/errorMessage";
 
 // export async function loader({ request }: LoaderFunctionArgs) {
@@ -39,9 +39,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	}
 
 	const user = await loginUser(username, password);
+	if (user.errors) {
+		return { errors: user.errors };
+	}
+
 	return redirect("/", {
 		headers: {
-			"Set-Cookie": await authCookie.serialize(user.id),
+			"Set-Cookie": await authCookie.serialize(user.userId),
 		},
 	});
 };

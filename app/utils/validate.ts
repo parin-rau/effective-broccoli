@@ -1,4 +1,4 @@
-import { userExists } from "../queries/user.queries";
+import { userExists } from "../queries/users.server";
 
 export const validateSignup = async (
 	username?: string,

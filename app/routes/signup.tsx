@@ -8,7 +8,7 @@ import PasswordInput from "~/components/ui/PasswordInput";
 import StyledButton from "~/components/ui/StyledButton";
 import TextInput from "~/components/ui/TextInput";
 import ErrorMessage from "~/components/ui/errorMessage";
-import { createUser } from "~/queries/user.queries";
+import { createUser } from "~/queries/users.server";
 import { validateSignup } from "~/utils/validate";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -17,7 +17,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	const password = String(formData.get("password"));
 	const passwordConfirm = String(formData.get("passwordConfirm"));
 
-	const errors = await validateSignup(password, passwordConfirm);
+	const errors = await validateSignup(username, password, passwordConfirm);
 	if (errors) {
 		return { errors };
 	}

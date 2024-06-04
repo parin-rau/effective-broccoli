@@ -15,7 +15,7 @@ model User {
   username String @unique
   password String
   passwordSalt String
-  timestamp Int
+  timestamp BigInt
 }
 
 model Project {
@@ -25,7 +25,7 @@ model Project {
   description String?
   progress Int @default(0)
   externalLink String?
-  timestamp Int
+  timestamp BigInt
 }
 
 model Task {
@@ -36,7 +36,7 @@ model Task {
   description String?
   progress Int @default(0)
   externalLink String?
-  timestamp Int
+  timestamp BigInt
 }
 
 model Subtask {
@@ -48,5 +48,5 @@ model Subtask {
   description String?
   progress Int @default(0)
   externalLink String?
-  timestamp Int
+  timestamp BigInt
 }

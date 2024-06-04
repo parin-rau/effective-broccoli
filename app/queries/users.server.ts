@@ -10,7 +10,7 @@ export const userExists = async (username: string) => {
 		select: { userId: true },
 	});
 
-	return { userExists: Boolean(user) };
+	return Boolean(user);
 };
 
 export const createUser = async (username: string, password: string) => {
@@ -34,11 +34,15 @@ export const loginUser = async (username: string, password: string) => {
 	});
 
 	if (!user || !user.password || !user.passwordSalt) {
-		return false;
+		return {
+			errors: { username: "Incorrect username/password", password: "" },
+		};
 	}
 
 	const isPassMatch = compareHash(user.password, password, user.passwordSalt);
-	return isPassMatch ? { userId: user.userId } : false;
+	return isPassMatch
+		? { userId: user.userId }
+		: { errors: { username: "Incorrect username/password", password: "" } };
 };
 
 export const updateUser = async (userId: string, data: Partial<User>) => {
