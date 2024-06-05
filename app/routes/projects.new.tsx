@@ -2,7 +2,7 @@ import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import DialogContainer from "~/components/container/DialogContainer";
-import ProjectEditor from "~/components/item/editor/ProjectEditor";
+import ProjectEditor from "~/components/item/projects/ProjectEditor";
 import { createProject } from "~/queries/projects.server";
 
 export async function action({ request }: ActionFunctionArgs) {

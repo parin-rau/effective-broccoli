@@ -1,8 +1,25 @@
 import { PrismaClient, Project } from "@prisma/client";
 import { json } from "@remix-run/node";
 import crypto from "crypto";
+import { toTimestampString } from "./utils/dateConversion";
+import { getProgressStats } from "./utils/progressPercent";
 
 const prisma = new PrismaClient();
+
+function processProjectData(project: Project) {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { userId, ...restProject } = project; // Removing userId from project
+
+	return {
+		...restProject,
+		timestamp: toTimestampString(Number(project.timestamp)),
+		progress: {
+			message: "Not Started",
+			taskCompletion: { ...getProgressStats(0, 0) },
+			subtaskCompletion: { ...getProgressStats(0, 0) },
+		},
+	};
+}
 
 export async function createProject({
 	userId,
@@ -15,7 +32,7 @@ export async function createProject({
 	description?: string;
 	externalLink?: string;
 }) {
-	const project = await prisma.project.create({
+	const projectId = await prisma.project.create({
 		data: {
 			userId,
 			projectId: crypto.randomUUID(),
@@ -24,8 +41,11 @@ export async function createProject({
 			externalLink,
 			timestamp: Date.now(),
 		},
+		select: {
+			projectId: true,
+		},
 	});
-	return json({ projectId: project.projectId }, 201);
+	return json({ projectId }, 201);
 }
 
 export async function getProject({
@@ -41,8 +61,9 @@ export async function getProject({
 	if (!project) {
 		return json({ error: "Project not found" }, 404);
 	}
+	const processed = processProjectData(project);
 
-	return json({ project }, 200);
+	return json({ project: processed }, 200);
 }
 
 export async function getProjectsByUserId(userId: string) {
@@ -51,8 +72,9 @@ export async function getProjectsByUserId(userId: string) {
 			userId,
 		},
 	});
+	const processed = projects.map((p) => processProjectData(p));
 
-	return json({ projects }, 200);
+	return json({ projects: processed }, 200);
 }
 
 export async function getAllProjects() {

@@ -5,7 +5,7 @@ import {
 	ItemData,
 	ItemMeta,
 } from "./itemTypes";
-import { getStatus } from "./utils/statusLookup";
+import { getStatus } from "../../queries/utils/statusLookup";
 
 function Subtask({ id, title, status }: SubtaskData) {
 	return (

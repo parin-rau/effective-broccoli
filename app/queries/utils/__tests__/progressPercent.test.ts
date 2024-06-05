@@ -1,4 +1,4 @@
-import { progressPercent } from "../progressPercent";
+import { progressPercent } from "../../../../queries/utils/progressPercent";
 
 // Normal use
 test("should calculate percent: 0%", () => {

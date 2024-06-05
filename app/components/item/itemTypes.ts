@@ -1,42 +1,43 @@
 export type ItemHeader = {
 	id: string;
 	title: string;
-	description?: string;
-	timestamp: number | string;
+	description: string | null;
+	timestamp: string;
 };
 
 export type StatusMessage = "Not Started" | "In Progress" | "Completed";
 
-export type Project = {
+export type ProjectCardProps = {
 	projectId: string;
-	userId: string;
+	//userId: string;
 	title: string;
-	description?: string;
-	externalLink?: string;
-	timestamp: number;
-	tasks: Task[];
+	description: string | null;
+	externalLink: string | null;
+	timestamp: string;
+	progress: ProjectCompletion;
+	//tasks: Task[];
 };
 
-export type Task = {
+export type TaskCardProps = {
 	taskId: string;
 	userId: string;
 	projectId: string;
 	title: string;
-	description?: string;
-	externalLink?: string;
-	timestamp: number;
-	subtasks: Subtask[];
+	description: string | null;
+	externalLink: string | null;
+	timestamp: string;
+	subtasks: SubtaskCardProps[];
 };
 
-export type Subtask = {
+export type SubtaskCardProps = {
 	subtaskId: string;
 	userId: string;
 	taskId: string;
 	projectId: string;
 	title: string;
-	description?: string;
-	externalLink?: string;
-	timestamp: number;
+	description: string | null;
+	externalLink: string | null;
+	timestamp: string;
 };
 
 type Completion = {
@@ -57,8 +58,4 @@ export type ProjectCompletion = {
 export type TaskCompletion = {
 	subtaskCompletion: Completion;
 	message: StatusMessage;
-};
-
-export type ProjectWithProgressProps = Project & {
-	progress: ProjectCompletion;
 };

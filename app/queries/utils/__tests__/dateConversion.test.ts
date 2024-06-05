@@ -1,4 +1,4 @@
-import { toTimestampString } from "../dateConversion";
+import { toTimestampString } from "../../../../queries/utils/dateConversion";
 
 // Simulated current time for comparisons
 const referenceDate = new Date("01 January 2024 12:00 UTC");

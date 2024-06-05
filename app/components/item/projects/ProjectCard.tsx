@@ -1,20 +1,18 @@
 import BorderContainer from "~/components/container/BorderContainer";
 import ItemHeader from "../ItemHeader";
-import { ProjectWithProgressProps } from "../itemTypes";
+import { ProjectCardProps } from "../itemTypes";
 import ProgressBar from "../ProgressBar";
 import { Link, useLocation } from "@remix-run/react";
 
 export default function ProjectCard({
 	projectId,
-	userId,
 	title,
 	description,
 	timestamp,
 	progress,
-}: ProjectWithProgressProps) {
+}: ProjectCardProps) {
 	const headerProps = {
 		id: projectId,
-		userId,
 		title,
 		description,
 		timestamp,

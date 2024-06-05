@@ -43,5 +43,7 @@ export const getProgressStats = (completed: number, total: number) => {
 		progressDecimal: progressDecimal(completed, total),
 		progressPercent: progressPercent(completed, total),
 		childBarStyles: childBarStyles(completed, total),
+		completed,
+		total,
 	};
 };

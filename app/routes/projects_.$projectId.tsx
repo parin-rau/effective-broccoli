@@ -1,18 +1,27 @@
+import { LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { requireAuthCookie } from "~/auth";
 import BasicContainer from "~/components/container/BasicContainer";
-import { ProjectWithProgressProps } from "~/components/item/itemTypes";
 import ProjectCard from "~/components/item/projects/ProjectCard";
-
-type Props = {
-	project: ProjectWithProgressProps;
-};
+import { getProject } from "~/queries/projects.server";
 
 export async function action() {
 	return null;
 }
-export async function loader() {
-	return null;
+export async function loader({ request, params }: LoaderFunctionArgs) {
+	const userId = await requireAuthCookie(request);
+	if (!params.projectId) {
+		return redirect("/projects");
+	}
+
+	const project = await (
+		await getProject({ projectId: params.projectId, userId })
+	).json();
+	return { project };
 }
-export default function Project({ project }: Props) {
+export default function Project() {
+	const project = useLoaderData<typeof loader>();
+
 	return (
 		<BasicContainer>
 			<ProjectCard {...project} />

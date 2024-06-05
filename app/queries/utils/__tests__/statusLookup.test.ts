@@ -1,4 +1,4 @@
-import { getStatus } from "../statusLookup";
+import { getStatus } from "../../../../queries/utils/statusLookup";
 
 test('status should be "not started"', () => {
 	expect(getStatus(2)).toBe("Not Started");
