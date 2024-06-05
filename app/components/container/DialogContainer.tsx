@@ -59,6 +59,13 @@ export default function DialogContainer({
 						/>
 					</SpreadContainer>
 					{children}
+					<StyledButton
+						styles="place-self-end px-4"
+						type="submit"
+						onClick={toggleDialog}
+					>
+						Submit
+					</StyledButton>
 				</BasicContainer>
 			</dialog>
 		</>

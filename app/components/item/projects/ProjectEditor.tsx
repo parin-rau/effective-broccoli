@@ -35,7 +35,6 @@ export default function ProjectEditor({
 				placeholder="External Resource URL (Optional)"
 				defaultValue={externalLink}
 			/>
-			<StyledButton styles="place-self-end px-4">Submit</StyledButton>
 		</BasicContainer>
 	);
 }

@@ -20,7 +20,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 	const project = await (
 		await updateProject({ userId, projectId: params.projectId, data })
 	).json();
-	return null;
+	return null; //redirect(`/projects/${params.projectId}`);
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
