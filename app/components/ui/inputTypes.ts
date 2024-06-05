@@ -1,5 +1,6 @@
 export type InputProps = {
 	type: React.HTMLInputTypeAttribute;
+	defaultValue?: string;
 	value?: string;
 	onChange?: (...args: any[]) => any;
 	placeholder?: string;

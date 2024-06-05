@@ -20,20 +20,20 @@ export default function ProjectEditor({
 				name="title"
 				label="Title"
 				placeholder="Project Title"
-				value={title}
+				defaultValue={title}
 				required
 			/>
 			<TextareaInput
 				name="description"
 				label="Description"
 				placeholder="Description (Optional)"
-				value={description}
+				defaultValue={description}
 			/>
 			<TextInput
 				name="externalLink"
 				label="External Resource"
 				placeholder="External Resource URL (Optional)"
-				value={externalLink}
+				defaultValue={externalLink}
 			/>
 			<StyledButton styles="place-self-end px-4">Submit</StyledButton>
 		</BasicContainer>

@@ -98,8 +98,9 @@ export async function updateProject({
 		},
 		data,
 	});
+	const processed = processProjectData(project);
 
-	return json({ project }, 200);
+	return json({ project: processed }, 200);
 }
 
 export async function deleteProject({

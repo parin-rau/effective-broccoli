@@ -1,6 +1,6 @@
 export type ItemHeader = {
 	id: string;
-	title: string;
+	title?: string;
 	description: string | null;
 	timestamp: string;
 };

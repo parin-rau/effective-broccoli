@@ -2,7 +2,11 @@ import BorderContainer from "~/components/container/BorderContainer";
 import ItemHeader from "../ItemHeader";
 import { ProjectCardProps } from "../itemTypes";
 import ProgressBar from "../ProgressBar";
-import { Link, useLocation } from "@remix-run/react";
+import { Link, useParams } from "@remix-run/react";
+import SpreadContainer from "~/components/container/SpreadContainer";
+import PageHeading from "~/components/container/PageHeading";
+import EditProject from "~/routes/projects_.$projectId.edit";
+import CreateTask from "~/routes/tasks.new";
 
 export default function ProjectCard({
 	projectId,
@@ -18,13 +22,26 @@ export default function ProjectCard({
 		timestamp,
 	};
 
-	const { pathname } = useLocation();
-	const isCurrentLocation = pathname === projectId;
+	const params = useParams();
+	const isCurrentLocation = params.projectId === projectId;
 
 	return (
 		<BorderContainer>
 			{isCurrentLocation ? (
-				<ItemHeader {...{ ...headerProps }} />
+				<>
+					<SpreadContainer>
+						<PageHeading>{title}</PageHeading>
+						<div className="flex gap-2">
+							<EditProject />
+							<CreateTask />
+						</div>
+					</SpreadContainer>
+					<ItemHeader
+						id={projectId}
+						description={description}
+						timestamp={timestamp}
+					/>
+				</>
 			) : (
 				<Link
 					to={`/projects/${projectId}`}

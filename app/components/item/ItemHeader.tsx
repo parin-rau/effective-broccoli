@@ -8,7 +8,7 @@ export default function ItemHeader({
 }: HeaderProps) {
 	return (
 		<BasicContainer>
-			<p className="text-2xl font-semibold">{title}</p>
+			{title && <p className="text-2xl font-semibold">{title}</p>}
 			<p className="italic">{timestamp}</p>
 			{description && <p className="">{description}</p>}
 		</BasicContainer>
