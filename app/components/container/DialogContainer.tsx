@@ -2,6 +2,7 @@ import { useRef } from "react";
 import BasicContainer from "./BasicContainer";
 import StyledButton from "../ui/StyledButton";
 import TransparentButton from "../ui/TransparentButton";
+import SpreadContainer from "./SpreadContainer";
 
 type DialogProps = {
 	children: React.ReactNode;
@@ -47,16 +48,16 @@ export default function DialogContainer({
 			<StyledButton onClick={toggleDialog}>{openButtonText}</StyledButton>
 			<dialog
 				ref={dialogRef}
-				className="w-5/6 w-max-2xl dark:text-neutral-200 dark:bg-neutral-800 "
+				className="w-5/6 w-max-2xl p-1 dark:text-neutral-200 dark:bg-neutral-800"
 			>
 				<BasicContainer>
-					<div className="p-4 w-full flex flex-row items-center justify-between">
+					<SpreadContainer>
 						<h2 className="text-3xl font-bold">{headerText}</h2>
 						<DialogCloseButton
 							closeButtonText={closeButtonText}
 							toggleDialog={toggleDialog}
 						/>
-					</div>
+					</SpreadContainer>
 					{children}
 				</BasicContainer>
 			</dialog>

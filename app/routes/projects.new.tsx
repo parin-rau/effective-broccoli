@@ -23,7 +23,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function NewProject() {
 	return (
-		<Form method="post">
+		<Form method="post" action="/projects/new">
 			<DialogContainer
 				headerText="Create New Project"
 				openButtonText="Create Project"

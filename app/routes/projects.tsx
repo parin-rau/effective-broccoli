@@ -1,8 +1,14 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import BasicContainer from "~/components/container/BasicContainer";
+import GridContainer from "~/components/container/GridContainer";
+import ProjectEditor from "~/components/item/editor/ProjectEditor";
 import { ProjectWithProgressProps } from "~/components/item/itemTypes";
-import ProjectContainer from "~/components/item/projects/ProjectContainer";
+import ProjectCard from "~/components/item/projects/ProjectCard";
 import { getProgressStats } from "~/components/item/utils/progressPercent";
+import NewProject from "./projects.new";
+import SpreadContainer from "~/components/container/SpreadContainer";
+import PageHeading from "~/components/container/PageHeading";
 
 export function action() {}
 
@@ -71,8 +77,21 @@ export function loader() {
 	]);
 }
 
-export default function Component() {
+export default function ProjectHome() {
 	const projects = useLoaderData<typeof loader>();
 
-	return <ProjectContainer projects={projects} />;
+	return (
+		<BasicContainer>
+			<SpreadContainer>
+				<PageHeading>Projects Home</PageHeading>
+				<NewProject />
+			</SpreadContainer>
+
+			<GridContainer>
+				{projects.map((p) => (
+					<ProjectCard key={p.projectId} {...p} />
+				))}
+			</GridContainer>
+		</BasicContainer>
+	);
 }
