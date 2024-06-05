@@ -42,21 +42,12 @@ export default function DialogContainer({
 			: dialogRef.current.showModal();
 	};
 
-	// const handleOutsideClick = (
-	// 	e: React.MouseEvent<HTMLDialogElement, MouseEvent>
-	// ) => {
-	// 	if (e.currentTarget === e.target) {
-	// 		toggleDialog();
-	// 	}
-	// };
-
 	return (
 		<>
 			<StyledButton onClick={toggleDialog}>{openButtonText}</StyledButton>
 			<dialog
 				ref={dialogRef}
 				className="w-5/6 w-max-2xl dark:text-neutral-200 dark:bg-neutral-800 "
-				//onClick={handleOutsideClick}
 			>
 				<BasicContainer>
 					<div className="p-4 w-full flex flex-row items-center justify-between">

@@ -19,7 +19,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await requireAuthCookie(request);
 	const res = await getHomeData(userId);
 	const views = await res.json();
-	return { views };
+	return { views, userId };
 }
 
 function Views({ views }: { views: { name: string; value: number }[] }) {
@@ -36,12 +36,13 @@ function Views({ views }: { views: { name: string; value: number }[] }) {
 }
 
 export default function Index() {
-	const { views } = useLoaderData<typeof loader>();
+	const { views, userId } = useLoaderData<typeof loader>();
 
 	return (
 		<BasicContainer>
 			<h1 className="font-bold">Hi Mom!</h1>
 			<h2 className="italic">Test test test</h2>
+			<h3>{`userId: ${userId}`}</h3>
 			<DialogContainer
 				openButtonText="New Project"
 				closeButtonText="Cancel"
