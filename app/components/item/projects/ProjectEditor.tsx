@@ -1,6 +1,5 @@
 import TextInput from "~/components/ui/TextInput";
 import TextareaInput from "~/components/ui/TextareaInput";
-import StyledButton from "~/components/ui/StyledButton";
 import BasicContainer from "~/components/container/BasicContainer";
 
 type Props = {
@@ -19,20 +18,20 @@ export default function ProjectEditor({
 			<TextInput
 				name="title"
 				label="Title"
-				placeholder="Project Title"
+				placeholder="Enter Project Title"
 				defaultValue={title}
 				required
 			/>
 			<TextareaInput
 				name="description"
 				label="Description"
-				placeholder="Description (Optional)"
+				placeholder="Enter Project Description (Optional)"
 				defaultValue={description}
 			/>
 			<TextInput
 				name="externalLink"
 				label="External Resource"
-				placeholder="External Resource URL (Optional)"
+				placeholder="Enter External Resource URL (Optional)"
 				defaultValue={externalLink}
 			/>
 		</BasicContainer>

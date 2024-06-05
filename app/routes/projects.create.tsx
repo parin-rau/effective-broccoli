@@ -21,9 +21,9 @@ export async function action({ request }: ActionFunctionArgs) {
 	return redirect(`/projects/${projectId}`);
 }
 
-export default function NewProject() {
+export default function CreateProject() {
 	return (
-		<Form method="post" action="/projects/new">
+		<Form method="post" action="/projects/create">
 			<DialogContainer
 				headerText="Create New Project"
 				openButtonText="Create Project"

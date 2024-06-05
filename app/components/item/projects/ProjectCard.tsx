@@ -6,7 +6,8 @@ import { Link, useParams } from "@remix-run/react";
 import SpreadContainer from "~/components/container/SpreadContainer";
 import PageHeading from "~/components/container/PageHeading";
 import EditProject from "~/routes/projects_.$projectId.edit";
-import CreateTask from "~/routes/tasks.new";
+import CreateTask from "~/routes/tasks.create";
+import DeleteProject from "~/routes/projects_.$projectId.delete";
 
 export default function ProjectCard({
 	projectId,
@@ -32,8 +33,9 @@ export default function ProjectCard({
 					<SpreadContainer>
 						<PageHeading>{title}</PageHeading>
 						<div className="flex gap-2">
+							<CreateTask projectId={projectId} />
 							<EditProject />
-							<CreateTask />
+							<DeleteProject />
 						</div>
 					</SpreadContainer>
 					<ItemHeader

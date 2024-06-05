@@ -1,36 +1,56 @@
-import EditorContainer from "./EditorContainer";
-import { Project, Subtask, Task } from "../itemTypes";
+import BasicContainer from "~/components/container/BasicContainer";
 import TextareaInput from "../../ui/TextareaInput";
 import TextInput from "../../ui/TextInput";
-import { useState } from "react";
 
-class Editor
-	implements
-		Omit<
-			Task,
-			"taskId" | "userId" | "projectId" | "progress" | "timestamp"
-		>
-{
-	title: string;
-	description?: string | undefined;
-	externalLink?: string | undefined;
-	subtasks: Subtask[];
+type Props = {
+	title?: string;
+	description?: string;
+	priority?: number;
+	externalLink?: string;
+	due?: string;
+};
 
-	constructor() {
-		this.title = "";
-		this.description = "";
-		this.externalLink = "";
-		this.subtasks = [];
-	}
-}
-
-export default function TaskEditor() {
-	const [editor, setEditor] = useState(new Editor());
-
+export default function TaskEditor({
+	title,
+	description,
+	priority,
+	externalLink,
+	due,
+}: Props) {
 	return (
-		<EditorContainer<Task>>
-			<TextInput name="title" value={} onChange={} />
-			<TextareaInput name="description" value={} onChange={} />
-		</EditorContainer>
+		<BasicContainer styles="gap-3">
+			<TextInput
+				name="title"
+				label="Title"
+				defaultValue={title}
+				placeholder="Enter Task Title"
+				required
+			/>
+			<TextareaInput
+				name="description"
+				label="Description"
+				defaultValue={description}
+				placeholder="Enter Task Description (Optional)"
+			/>
+			<TextInput
+				name="externalLink"
+				label="External Resource"
+				defaultValue={externalLink}
+				placeholder="Enter External Resource URL (Optional)"
+			/>
+			<label htmlFor="priority-select">Task Priority</label>
+			<select id="priority-select" defaultValue={priority}>
+				<option value="">Select Task Priority</option>
+				<option value="low">Low</option>
+				<option value="medium">Medium</option>
+				<option value="high">High</option>
+			</select>
+			<input
+				name="due"
+				defaultValue={due}
+				type="date"
+				placeholder="Enter Due Date (Optional)"
+			/>
+		</BasicContainer>
 	);
 }

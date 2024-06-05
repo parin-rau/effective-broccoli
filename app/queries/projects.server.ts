@@ -32,7 +32,7 @@ export async function createProject({
 	description?: string;
 	externalLink?: string;
 }) {
-	const projectId = await prisma.project.create({
+	const { projectId } = await prisma.project.create({
 		data: {
 			userId,
 			projectId: crypto.randomUUID(),

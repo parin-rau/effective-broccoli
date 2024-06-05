@@ -9,6 +9,8 @@ type DialogProps = {
 	openButtonText: string;
 	closeButtonText: string;
 	headerText: string;
+	inlineButtons?: boolean;
+	smallWidth?: boolean;
 };
 
 type CloseButtonProps = {
@@ -16,14 +18,34 @@ type CloseButtonProps = {
 	closeButtonText: string;
 };
 
+type SubmitButtonProps = {
+	toggleDialog: () => void;
+	submitButtonText?: string;
+};
+
 function DialogCloseButton({
 	toggleDialog,
 	closeButtonText,
 }: CloseButtonProps) {
 	return (
-		<TransparentButton onClick={toggleDialog}>
+		<TransparentButton onClick={toggleDialog} styles="place-self-end">
 			{closeButtonText}
 		</TransparentButton>
+	);
+}
+
+function DialogSubmitButton({
+	toggleDialog,
+	submitButtonText,
+}: SubmitButtonProps) {
+	return (
+		<StyledButton
+			styles="place-self-end px-4 mr-2"
+			type="submit"
+			onClick={toggleDialog}
+		>
+			{submitButtonText ?? "Submit"}
+		</StyledButton>
 	);
 }
 
@@ -32,6 +54,8 @@ export default function DialogContainer({
 	openButtonText,
 	closeButtonText,
 	headerText,
+	inlineButtons,
+	smallWidth,
 }: DialogProps) {
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const toggleDialog = () => {
@@ -48,24 +72,37 @@ export default function DialogContainer({
 			<StyledButton onClick={toggleDialog}>{openButtonText}</StyledButton>
 			<dialog
 				ref={dialogRef}
-				className="w-5/6 w-max-2xl p-1 dark:text-neutral-200 dark:bg-neutral-800"
+				className={`${
+					smallWidth ? "w-1/3" : "w-5/6"
+				} w-max-2xl p-1 dark:text-neutral-200 dark:bg-neutral-800`}
 			>
 				<BasicContainer>
-					<SpreadContainer>
-						<h2 className="text-3xl font-bold">{headerText}</h2>
-						<DialogCloseButton
-							closeButtonText={closeButtonText}
-							toggleDialog={toggleDialog}
-						/>
+					<SpreadContainer noSmallStack>
+						<h2 className="text-2xl sm:text-3xl font-bold">
+							{headerText}
+						</h2>
+						{!inlineButtons && (
+							<DialogCloseButton
+								closeButtonText={closeButtonText}
+								toggleDialog={toggleDialog}
+							/>
+						)}
 					</SpreadContainer>
 					{children}
-					<StyledButton
-						styles="place-self-end px-4"
-						type="submit"
-						onClick={toggleDialog}
-					>
-						Submit
-					</StyledButton>
+					{inlineButtons ? (
+						<div className="flex flex-row gap-2 place-self-end">
+							<DialogCloseButton
+								closeButtonText={closeButtonText}
+								toggleDialog={toggleDialog}
+							/>
+							<DialogSubmitButton
+								submitButtonText="Confirm"
+								toggleDialog={toggleDialog}
+							/>
+						</div>
+					) : (
+						<DialogSubmitButton toggleDialog={toggleDialog} />
+					)}
 				</BasicContainer>
 			</dialog>
 		</>

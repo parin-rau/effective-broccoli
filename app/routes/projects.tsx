@@ -3,7 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import BasicContainer from "~/components/container/BasicContainer";
 import GridContainer from "~/components/container/GridContainer";
 import ProjectCard from "~/components/item/projects/ProjectCard";
-import NewProject from "./projects.new";
+import NewProject from "./projects.create";
 import SpreadContainer from "~/components/container/SpreadContainer";
 import PageHeading from "~/components/container/PageHeading";
 import { requireAuthCookie } from "~/auth";
