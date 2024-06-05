@@ -1,17 +1,6 @@
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import TransparentButton from "../ui/TransparentButton";
 import LogoutIcon from "~/assets/LogoutIcon";
-import { destroySession, getSession } from "~/sessions";
-
-// export async function action({ request }: ActionFunctionArgs) {
-// 	const session = await getSession(request.headers.get("Cookie"));
-// 	return redirect("/login", {
-// 		headers: {
-// 			"Set-Cookie": await destroySession(session),
-// 		},
-// 	});
-// }
 
 export default function LogoutButton() {
 	return (

@@ -4,13 +4,11 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
-	useLoaderData,
 	useLocation,
 } from "@remix-run/react";
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import type { LinksFunction } from "@remix-run/node";
 import stylesheet from "~/tailwind.css?url";
 import MainLayout from "./layouts/MainLayout";
-import { authCookie } from "./auth";
 
 export const links: LinksFunction = () => [
 	{ rel: "stylesheet", href: stylesheet },
@@ -18,16 +16,7 @@ export const links: LinksFunction = () => [
 
 const pathsOutsideMainLayout = ["/login", "/signup"];
 
-export const loader = async ({
-	request,
-}: LoaderFunctionArgs): Promise<{ userId?: string }> => {
-	const cookie = request.headers.get("Cookie");
-	const userId = await authCookie.parse(cookie);
-	return { userId };
-};
-
 export function Layout({ children }: { children: React.ReactNode }) {
-	const userId = useLoaderData<typeof loader>();
 	const { pathname } = useLocation();
 	const isOutsideMainLayout = pathsOutsideMainLayout.includes(pathname);
 

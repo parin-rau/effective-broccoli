@@ -1,7 +1,11 @@
 import { Form, Link, useActionData } from "@remix-run/react";
 import PasswordInput from "../components/ui/PasswordInput";
 import TextInput from "../components/ui/TextInput";
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
+import {
+	ActionFunctionArgs,
+	LoaderFunctionArgs,
+	redirect,
+} from "@remix-run/node";
 import BorderContainer from "../components/container/BorderContainer";
 import StyledButton from "~/components/ui/StyledButton";
 import BasicContainer from "~/components/container/BasicContainer";
@@ -34,6 +38,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		},
 	});
 };
+
+export async function loader({ request }: LoaderFunctionArgs) {
+	const cookie = request.headers.get("Cookie");
+	const userId = await authCookie.parse(cookie);
+	if (userId) {
+		throw redirect("/");
+	} else {
+		return null;
+	}
+}
 
 export default function Login() {
 	const actionData = useActionData<typeof action>();

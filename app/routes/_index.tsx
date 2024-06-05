@@ -1,23 +1,25 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { json, useLoaderData } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import BasicContainer from "~/components/container/BasicContainer";
+import DialogContainer from "~/components/container/DialogContainer";
 
 export const meta: MetaFunction = () => {
 	return [{ title: "Projects" }, { name: "app home", content: "app home" }];
 };
 
-function getHomeData() {
-	return [
+async function getHomeData() {
+	return json([
 		{ name: "test 1", value: 200 },
 		{ name: "test 2", value: 400 },
-	];
+	]);
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await requireAuthCookie(request);
-	const views = await getHomeData(userId);
-	return views;
+	const res = await getHomeData(userId);
+	const views = await res.json();
+	return { views };
 }
 
 function Views({ views }: { views: { name: string; value: number }[] }) {
@@ -40,6 +42,13 @@ export default function Index() {
 		<BasicContainer>
 			<h1 className="font-bold">Hi Mom!</h1>
 			<h2 className="italic">Test test test</h2>
+			<DialogContainer
+				openButtonText="New Project"
+				closeButtonText="Cancel"
+				headerText="Create New Project"
+			>
+				{"I'm a modal"}
+			</DialogContainer>
 			<Views views={views} />
 		</BasicContainer>
 	);
