@@ -6,17 +6,21 @@ import { getProgressStats } from "./utils/progressPercent";
 
 const prisma = new PrismaClient();
 
-function processProjectData(project: Project) {
+function processProjectData(
+	project: Project & {
+		_count: { tasks: number; subtasks: number };
+	}
+) {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { userId, ...restProject } = project; // Removing userId from project
+	const { userId, _count, ...restProject } = project; // Removing userId from project
 
 	return {
 		...restProject,
 		timestamp: toTimestampString(Number(project.timestamp)),
 		progress: {
 			message: "Not Started",
-			taskCompletion: { ...getProgressStats(0, 0) },
-			subtaskCompletion: { ...getProgressStats(0, 0) },
+			taskCompletion: { ...getProgressStats(0, _count.tasks) },
+			subtaskCompletion: { ...getProgressStats(0, _count.subtasks) },
 		},
 	};
 }
@@ -57,11 +61,21 @@ export async function getProject({
 }) {
 	const project = await prisma.project.findUnique({
 		where: { projectId, userId },
+		include: {
+			_count: {
+				select: {
+					tasks: true,
+					subtasks: true,
+				},
+			},
+		},
 	});
 	if (!project) {
 		return json({ error: "Project not found" }, 404);
 	}
+
 	const processed = processProjectData(project);
+	console.log({ project, processed });
 
 	return json({ project: processed }, 200);
 }
@@ -70,6 +84,14 @@ export async function getProjectsByUserId(userId: string) {
 	const projects = await prisma.project.findMany({
 		where: {
 			userId,
+		},
+		include: {
+			_count: {
+				select: {
+					tasks: true,
+					subtasks: true,
+				},
+			},
 		},
 	});
 	const processed = projects.map((p) => processProjectData(p));
@@ -95,6 +117,14 @@ export async function updateProject({
 		where: {
 			projectId,
 			userId,
+		},
+		include: {
+			_count: {
+				select: {
+					tasks: true,
+					subtasks: true,
+				},
+			},
 		},
 		data,
 	});

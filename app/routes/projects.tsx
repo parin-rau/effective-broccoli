@@ -20,6 +20,7 @@ export default function ProjectHome() {
 
 	return (
 		<BasicContainer>
+			{" "}
 			<SpreadContainer>
 				<PageHeading>Projects Home</PageHeading>
 				<NewProject />

@@ -73,7 +73,7 @@ export default function DialogContainer({
 			<dialog
 				ref={dialogRef}
 				className={`${
-					smallWidth ? "w-1/3" : "w-5/6"
+					smallWidth ? "w-1/2" : "w-5/6"
 				} w-max-2xl p-1 dark:text-neutral-200 dark:bg-neutral-800`}
 			>
 				<BasicContainer>

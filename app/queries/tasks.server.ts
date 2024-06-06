@@ -1,9 +1,26 @@
 import { PrismaClient, Task } from "@prisma/client";
+import crypto from "crypto";
+
+type CreateTask = {
+	userId: string;
+	projectId: string;
+	title: string;
+	description?: string;
+	priority?: number;
+	due?: string;
+	externalLink?: string;
+};
 
 const prisma = new PrismaClient();
 
-export async function createTask() {
-	const task = await prisma.task.create({});
+export async function createTask(formData: CreateTask) {
+	const task = await prisma.task.create({
+		data: {
+			...formData,
+			taskId: crypto.randomUUID(),
+			timestamp: Date.now(),
+		},
+	});
 }
 
 export async function getTask(taskId: string) {}

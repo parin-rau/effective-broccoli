@@ -3,7 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import BasicContainer from "~/components/container/BasicContainer";
 import ProjectCard from "~/components/item/projects/ProjectCard";
-import { getProject, updateProject } from "~/queries/projects.server";
+import { getProject } from "~/queries/projects.server";
 
 export async function action() {
 	return null;
@@ -15,14 +15,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 		return redirect("/projects");
 	}
 
-	const { project, error } = await (
+	const data = await (
 		await getProject({ projectId: params.projectId, userId })
 	).json();
-	return { project, error };
+	return data;
 }
 
 export default function Project() {
-	const { error, project } = useLoaderData<typeof loader>();
+	const loaderData = useLoaderData<typeof loader>();
+	const error = loaderData?.error;
+	const project = loaderData?.project;
 
 	return (
 		<BasicContainer>

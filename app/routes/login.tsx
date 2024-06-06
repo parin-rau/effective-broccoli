@@ -13,7 +13,7 @@ import CenteredContainer from "~/components/container/CenteredContainer";
 import { validateLogin } from "~/utils/validate";
 import { authCookie } from "~/auth";
 import { loginUser } from "~/queries/users.server";
-import ErrorMessage from "~/components/ui/errorMessage";
+import ErrorMessage from "~/components/ui/ErrorMessage";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 	const formData = await request.formData();

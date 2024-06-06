@@ -16,21 +16,29 @@ model User {
   password String
   passwordSalt String
   timestamp BigInt
+  projects Project[]
+  tasks Task[]
+  subtasks Subtask[]
 }
 
 model Project {
   projectId String @unique @id
+  user User @relation(fields: [userId], references: [userId])
   userId String
   title String
   description String?
-  progress Int @default(0)
+  //progress Int @default(0)
   externalLink String?
   timestamp BigInt
+  tasks Task[]
+  subtasks Subtask[]
 }
 
 model Task {
   taskId String @unique @id
+  user User @relation(fields: [userId], references: [userId])
   userId String
+  project Project @relation(fields: [projectId], references: [projectId])
   projectId String
   title String
   description String?
@@ -39,12 +47,16 @@ model Task {
   due String?
   externalLink String?
   timestamp BigInt
+  subtasks Subtask[]
 }
 
 model Subtask {
   subtaskId String @unique @id
+  user User @relation(fields: [userId], references: [userId])
   userId String
+  project Project @relation(fields: [projectId], references: [projectId])
   projectId String
+  task Task @relation(fields: [taskId], references: [taskId])
   taskId String
   title String
   description String?

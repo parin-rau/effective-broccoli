@@ -8,6 +8,7 @@ type Props = {
 	priority?: number;
 	externalLink?: string;
 	due?: string;
+	projectId: string;
 };
 
 export default function TaskEditor({
@@ -16,6 +17,7 @@ export default function TaskEditor({
 	priority,
 	externalLink,
 	due,
+	projectId,
 }: Props) {
 	return (
 		<BasicContainer styles="gap-3">
@@ -51,6 +53,7 @@ export default function TaskEditor({
 				type="date"
 				placeholder="Enter Due Date (Optional)"
 			/>
+			<input type="hidden" name="projectId" defaultValue={projectId} />
 		</BasicContainer>
 	);
 }

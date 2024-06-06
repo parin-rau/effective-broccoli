@@ -7,7 +7,7 @@ import CenteredContainer from "~/components/container/CenteredContainer";
 import PasswordInput from "~/components/ui/PasswordInput";
 import StyledButton from "~/components/ui/StyledButton";
 import TextInput from "~/components/ui/TextInput";
-import ErrorMessage from "~/components/ui/errorMessage";
+import ErrorMessage from "~/components/ui/ErrorMessage";
 import { createUser } from "~/queries/users.server";
 import { validateSignup } from "~/utils/validate";
 

@@ -14,6 +14,7 @@ export async function action({ request }: ActionFunctionArgs) {
 	const externalLink = String(formData.get("externalLink"));
 	const priority = String(formData.get("priority"));
 	const due = String(formData.get("due"));
+	const projectId = String(formData.get("projectId"));
 
 	const { taskId } = await (
 		await createTask({
@@ -37,7 +38,7 @@ export default function CreateTask({ projectId }: { projectId: string }) {
 				openButtonText="Create Task"
 				closeButtonText="Cancel"
 			>
-				<TaskEditor />
+				<TaskEditor projectId={projectId} />
 			</DialogContainer>
 		</Form>
 	);
