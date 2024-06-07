@@ -3,19 +3,22 @@ export type ItemHeader = {
 	title?: string;
 	description: string | null;
 	timestamp: string;
+	status?: StatusDisplay;
+	priority?: StatusDisplay;
 };
 
-export type StatusMessage = "Not Started" | "In Progress" | "Completed";
+export type StatusDisplay = {
+	message: string;
+	styles?: string;
+};
 
 export type ProjectCardProps = {
 	projectId: string;
-	//userId: string;
 	title: string;
 	description: string | null;
 	externalLink: string | null;
 	timestamp: string;
 	progress: ProjectCompletion;
-	//tasks: Task[];
 };
 
 export type TaskCardProps = {
@@ -52,10 +55,9 @@ type Completion = {
 export type ProjectCompletion = {
 	taskCompletion: Completion;
 	subtaskCompletion: Completion;
-	message: StatusMessage;
 };
 
 export type TaskCompletion = {
 	subtaskCompletion: Completion;
-	message: StatusMessage;
+	status: StatusDisplay;
 };

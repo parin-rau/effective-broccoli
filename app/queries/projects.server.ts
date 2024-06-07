@@ -1,4 +1,5 @@
 import { PrismaClient, Project } from "@prisma/client";
+import { ProjectCardProps } from "~/components/item/itemTypes";
 import { json } from "@remix-run/node";
 import crypto from "crypto";
 import { toTimestampString } from "./utils/dateConversion";
@@ -8,19 +9,43 @@ const prisma = new PrismaClient();
 
 function processProjectData(
 	project: Project & {
-		_count: { tasks: number; subtasks: number };
+		tasks: { subtasks: { progress: number }[] }[];
 	}
-) {
+): ProjectCardProps {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { userId, _count, ...restProject } = project; // Removing userId from project
+	const { userId, tasks, ...restProject } = project; // Removing userId from project
+
+	const totalTasks = tasks.length;
+	let completedTasks = 0;
+	let totalSubtasks = 0;
+	let completedSubtasks = 0;
+
+	tasks.forEach((task) => {
+		const totalSubtasksPerTask = task.subtasks.length;
+		let completedSubtasksPerTask = 0;
+
+		totalSubtasks += totalSubtasksPerTask;
+		task.subtasks.forEach((subtask) => {
+			if (subtask.progress === 2) {
+				completedSubtasks += 1;
+				completedSubtasksPerTask += 1;
+			}
+		});
+		if (completedSubtasksPerTask === totalSubtasksPerTask) {
+			completedTasks += 1;
+		}
+	});
 
 	return {
 		...restProject,
 		timestamp: toTimestampString(Number(project.timestamp)),
 		progress: {
-			message: "Not Started",
-			taskCompletion: { ...getProgressStats(0, _count.tasks) },
-			subtaskCompletion: { ...getProgressStats(0, _count.subtasks) },
+			taskCompletion: {
+				...getProgressStats(completedTasks, totalTasks),
+			},
+			subtaskCompletion: {
+				...getProgressStats(completedSubtasks, totalSubtasks),
+			},
 		},
 	};
 }
@@ -59,17 +84,57 @@ export async function getProject({
 	userId: string;
 	projectId: string;
 }) {
+	// const project = await prisma.project.findUnique({
+	// 	where: { projectId, userId },
+	// 	include: {
+	// 		_count: {
+	// 			select: {
+	// 				tasks: true,
+	// 				subtasks: true,
+	// 			},
+	// 		},
+	// 	},
+	// });
+
+	// const completedTaskCount = await prisma.task.count({
+	// 	where: { projectId, userId, subtasks: { every: { progress: 2 } } },
+	// });
+	// const completedSubtaskCount = await prisma.subtask.count({
+	// 	where: { projectId, userId, progress: 2 },
+	// });
+
+	// const [project, completedTaskCount, completedSubtaskCount] =
+	// 	await prisma.$transaction([
+	// 		prisma.project.findUnique({
+	// 			where: { projectId, userId },
+	// 			include: {
+	// 				_count: {
+	// 					select: {
+	// 						tasks: true,
+	// 						subtasks: true,
+	// 					},
+	// 				},
+	// 			},
+	// 		}),
+	// 		prisma.task.count({
+	// 			where: {
+	// 				projectId,
+	// 				userId,
+	// 				subtasks: { every: { progress: 2 } },
+	// 			},
+	// 		}),
+	// 		prisma.subtask.count({ where: { projectId, userId, progress: 2 } }),
+	// 	]);
+
 	const project = await prisma.project.findUnique({
 		where: { projectId, userId },
 		include: {
-			_count: {
-				select: {
-					tasks: true,
-					subtasks: true,
-				},
+			tasks: {
+				select: { subtasks: { select: { progress: true } } },
 			},
 		},
 	});
+
 	if (!project) {
 		return json({ error: "Project not found" }, 404);
 	}
@@ -86,21 +151,26 @@ export async function getProjectsByUserId(userId: string) {
 			userId,
 		},
 		include: {
-			_count: {
-				select: {
-					tasks: true,
-					subtasks: true,
-				},
+			tasks: {
+				select: { subtasks: { select: { progress: true } } },
 			},
 		},
 	});
+
 	const processed = projects.map((p) => processProjectData(p));
+	console.log({ processed });
 
 	return json({ projects: processed }, 200);
 }
 
 export async function getAllProjects() {
-	const projects = await prisma.project.findMany({});
+	const projects = await prisma.project.findMany({
+		include: {
+			tasks: {
+				select: { subtasks: { select: { progress: true } } },
+			},
+		},
+	});
 	return json({ projects }, 200);
 }
 
@@ -119,12 +189,7 @@ export async function updateProject({
 			userId,
 		},
 		include: {
-			_count: {
-				select: {
-					tasks: true,
-					subtasks: true,
-				},
-			},
+			tasks: { select: { subtasks: { select: { progress: true } } } },
 		},
 		data,
 	});

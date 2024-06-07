@@ -27,7 +27,7 @@ model Project {
   userId String
   title String
   description String?
-  //progress Int @default(0)
+  onHold Boolean @default(false)
   externalLink String?
   timestamp BigInt
   tasks Task[]
@@ -42,7 +42,7 @@ model Task {
   projectId String
   title String
   description String?
-  //progress Int @default(0)
+  onHold Boolean @default(false)
   priority Int @default(0)
   due String?
   externalLink String?
