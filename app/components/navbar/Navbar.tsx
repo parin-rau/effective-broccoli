@@ -1,17 +1,21 @@
 import BasicContainer from "../container/BasicContainer";
-import DarkModeToggle from "./DarkModeToggle";
 import LogoutButton from "./LogoutButton";
 import NavbarLink from "./NavbarLink";
 
 export default function Navbar() {
 	return (
-		<BasicContainer styles="w-40 h-screen sticky hidden sm:flex border-r border-neutral-500 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
-			<NavbarLink text="Home" to="/" />
-			<NavbarLink text="Projects" to="/projects" />
-			<NavbarLink text="Tasks" to="/tasks" />
-			<NavbarLink text="User" to="/user" />
-			<DarkModeToggle />
-			<LogoutButton />
+		<BasicContainer styles="h-screen sticky hidden sm:flex border-r border-neutral-500 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
+			<div className="flex flex-col gap-4 divide-y divide-neutral-500">
+				<div className="flex flex-col gap-2">
+					<NavbarLink text="Home" to="/" />
+					<NavbarLink text="Projects" to="/projects" />
+					<NavbarLink text="Tasks" to="/tasks" />
+					<NavbarLink text="User" to="/user" />
+				</div>
+				<div className="pt-4 flex flex-col gap-2">
+					<LogoutButton />
+				</div>
+			</div>
 		</BasicContainer>
 	);
 }

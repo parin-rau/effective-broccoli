@@ -5,7 +5,6 @@ import BasicContainer from "~/components/container/BasicContainer";
 import ProjectCard from "~/components/item/projects/ProjectCard";
 import ErrorBanner from "~/components/ui/ErrorBanner";
 import { getProject } from "~/queries/projects.server";
-import TaskFeedForProject from "./projects_.$projectId.tasks";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
 	const userId = await requireAuthCookie(request);
