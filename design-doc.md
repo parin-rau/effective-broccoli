@@ -21,7 +21,7 @@
 -   Remix
 -   Express/Node
 -   Prisma
--   PostgreSQL
+-   PostgreSQL/SQLite
 
 ### Deployment
 

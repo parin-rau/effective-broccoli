@@ -3,6 +3,7 @@ import { Form, useActionData, useParams } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import DialogContainer from "~/components/container/DialogContainer";
 import ErrorBanner from "~/components/ui/ErrorBanner";
+import WarningBanner from "~/components/ui/WarningBanner";
 import { deleteProject } from "~/queries/projects.server";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -36,9 +37,14 @@ export default function DeleteProject() {
 					inlineButtons
 					smallWidth
 				>
-					<span className="p-2">
-						Are you sure you want to delete this project?
-					</span>
+					<WarningBanner>
+						<span>
+							Are you sure you want to delete this project?
+						</span>
+						<span>
+							Proceeding will also delete all associated tasks.
+						</span>
+					</WarningBanner>
 				</DialogContainer>
 			</Form>
 		</>

@@ -23,18 +23,19 @@ export type ProjectCardProps = {
 
 export type TaskCardProps = {
 	taskId: string;
-	userId: string;
+	//userId: string;
 	projectId: string;
 	title: string;
 	description: string | null;
 	externalLink: string | null;
 	timestamp: string;
 	subtasks: SubtaskCardProps[];
+	progress: TaskCompletion;
 };
 
 export type SubtaskCardProps = {
 	subtaskId: string;
-	userId: string;
+	//userId: string;
 	taskId: string;
 	projectId: string;
 	title: string;
