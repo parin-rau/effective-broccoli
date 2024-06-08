@@ -6,7 +6,7 @@ import {
 } from "~/components/item/itemTypes";
 import { toTimestampString } from "./dateConversion";
 import { getProgressStats } from "./progressPercent";
-import { getItemStatus } from "./statusLookup";
+import { getItemStatus, getTaskDue, getTaskPriority } from "./statusLookup";
 
 export function processProjectData(
 	project: Project & {
@@ -32,7 +32,10 @@ export function processProjectData(
 				completedSubtasksPerTask += 1;
 			}
 		});
-		if (completedSubtasksPerTask === totalSubtasksPerTask) {
+		if (
+			totalSubtasksPerTask > 0 &&
+			completedSubtasksPerTask === totalSubtasksPerTask
+		) {
 			completedTasks += 1;
 		}
 	});
@@ -71,6 +74,8 @@ export function processTaskData(
 
 	return {
 		...restTask,
+		due: getTaskDue(task.due),
+		priority: getTaskPriority(task.priority),
 		timestamp: toTimestampString(Number(task.timestamp)),
 		progress: {
 			subtaskCompletion: {

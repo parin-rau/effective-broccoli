@@ -6,7 +6,6 @@ import { Link, useParams } from "@remix-run/react";
 import SpreadContainer from "~/components/container/SpreadContainer";
 import PageHeading from "~/components/container/PageHeading";
 import EditProject from "~/routes/projects_.$projectId.edit";
-import CreateTask from "~/routes/tasks.create";
 import DeleteProject from "~/routes/projects_.$projectId.delete";
 
 export default function ProjectCard({
@@ -16,13 +15,6 @@ export default function ProjectCard({
 	timestamp,
 	progress,
 }: ProjectCardProps) {
-	const headerProps = {
-		id: projectId,
-		title,
-		description,
-		timestamp,
-	};
-
 	const params = useParams();
 	const isCurrentLocation = params.projectId === projectId;
 
@@ -33,23 +25,21 @@ export default function ProjectCard({
 					<SpreadContainer>
 						<PageHeading>{title}</PageHeading>
 						<div className="flex gap-2">
-							<CreateTask projectId={projectId} />
 							<EditProject />
 							<DeleteProject />
 						</div>
 					</SpreadContainer>
 					<ItemHeader
-						id={projectId}
 						description={description}
 						timestamp={timestamp}
 					/>
 				</>
 			) : (
 				<Link
-					to={`/projects/${projectId}`}
+					to={`/projects/${projectId}/tasks`}
 					className="hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-800 dark:active:bg-neutral-700 rounded-lg"
 				>
-					<ItemHeader {...{ ...headerProps }} />
+					<ItemHeader title={title} timestamp={timestamp} />
 				</Link>
 			)}
 			<ProgressBar {...{ ...progress.taskCompletion, uom: "Tasks" }} />

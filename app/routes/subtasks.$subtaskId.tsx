@@ -4,6 +4,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	return null;
 }
 
-export default function TaskPage() {
+export default function SubtaskPage() {
 	return null;
 }

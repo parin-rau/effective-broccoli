@@ -35,7 +35,7 @@ function Views({ views }: { views: { name: string; value: number }[] }) {
 	);
 }
 
-export default function Index() {
+export default function IndexPage() {
 	const { views, userId } = useLoaderData<typeof loader>();
 
 	return (

@@ -9,7 +9,7 @@ type Props = {
 
 export default function NavbarLink({ to, text, children }: Props) {
 	const { pathname } = useLocation();
-	const isCurrentLocation = pathnameMatch(pathname, to);
+	const isCurrentLocation = pathnameMatch(to, pathname);
 
 	return (
 		<Link

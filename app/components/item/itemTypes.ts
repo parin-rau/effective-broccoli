@@ -1,7 +1,6 @@
 export type ItemHeader = {
-	id: string;
 	title?: string;
-	description: string | null;
+	description?: string | null;
 	timestamp: string;
 	status?: StatusDisplay;
 	priority?: StatusDisplay;
@@ -29,7 +28,9 @@ export type TaskCardProps = {
 	description: string | null;
 	externalLink: string | null;
 	timestamp: string;
-	subtasks: SubtaskCardProps[];
+	due: { date: string; modifier: string; styles: string };
+	priority: { value: number; text: string; styles: string };
+	subtasks?: SubtaskCardProps[];
 	progress: TaskCompletion;
 };
 

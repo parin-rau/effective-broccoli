@@ -13,17 +13,59 @@ export function getTaskStatus(statusCode: number) {
 	}
 }
 
-export function getTaskPriority(priorityCode: number) {
-	const lookup: Record<string, string> = {
-		"0": "Low",
-		"1": "Medium",
-		"2": "High",
+export function getTaskPriority(priorityCode: number, onHold?: boolean) {
+	const lookup: Record<
+		string,
+		{ text: string; value: number; styles: string }
+	> = {
+		"-1": { text: "On Hold", value: -1, styles: "bg-purple-700" },
+		"0": { text: "Low", value: 0, styles: "bg-emerald-700" },
+		"1": { text: "Medium", value: 1, styles: "bg-amber-700" },
+		"2": { text: "High", value: 2, styles: "bg-red-700" },
 	};
 
-	if (Object.keys(lookup).includes(priorityCode.toString())) {
+	if (onHold) {
+		return lookup["-1"];
+	} else if (Object.keys(lookup).includes(priorityCode.toString())) {
 		return lookup[priorityCode];
 	} else {
-		return "Invalid Status";
+		return lookup["0"];
+	}
+}
+
+export function getTaskDue(due?: string | null): {
+	modifier: string;
+	styles: string;
+	date: string;
+} {
+	if (!due) {
+		return { modifier: "", styles: "", date: "" };
+	}
+
+	const currentDate = new Date();
+	const dueDate = new Date(due);
+
+	const getDateStats = (d: Date) => [
+		d.getFullYear(),
+		d.getMonth(),
+		d.getDay(),
+		d.getTime(),
+	];
+
+	const [cYear, cMonth, cDay, cTime] = getDateStats(currentDate);
+	const [dYear, dMonth, dDay, dTime] = getDateStats(dueDate);
+
+	const formattedDue = "";
+	if (dTime < cTime) {
+		return {
+			modifier: "Overdue",
+			styles: "text-emerald-600",
+			date: formattedDue,
+		};
+	} else if (cYear === dYear && cMonth === dMonth && cDay === dDay) {
+		return { modifier: "Today", styles: "text-red", date: formattedDue };
+	} else {
+		return { modifier: "", styles: "", date: formattedDue };
 	}
 }
 

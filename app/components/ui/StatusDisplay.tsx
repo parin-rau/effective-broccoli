@@ -6,7 +6,11 @@ export default function StatusDisplay({
 	styles?: string;
 }) {
 	return (
-		<span className={`p-4 rounded-md font-semibold ${styles ?? ""}`}>
+		<span
+			className={`px-3 py-2 w-fit rounded-md font-semibold ${
+				styles ?? ""
+			}`}
+		>
 			{message}
 		</span>
 	);

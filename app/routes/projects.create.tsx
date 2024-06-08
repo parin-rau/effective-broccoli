@@ -1,8 +1,9 @@
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
+import { Form, useActionData } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import DialogContainer from "~/components/container/DialogContainer";
 import ProjectEditor from "~/components/item/projects/ProjectEditor";
+import ErrorBanner from "~/components/ui/ErrorBanner";
 import { createProject } from "~/queries/projects.server";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -15,13 +16,22 @@ export async function action({ request }: ActionFunctionArgs) {
 	}
 
 	const userId = await requireAuthCookie(request);
-	const { projectId } = await (
-		await createProject({ userId, title, description, externalLink })
-	).json();
-	return redirect(`/projects/${projectId}`);
+	const { data, error, statusCode } = await createProject({
+		userId,
+		title,
+		description,
+		externalLink,
+	});
+
+	return data?.projectId
+		? redirect(`/projects/${data.projectId}`)
+		: json({ error }, statusCode);
 }
 
 export default function CreateProject() {
+	const loaderData = useActionData<typeof action>();
+	const error = loaderData?.error;
+
 	return (
 		<Form method="post" action="/projects/create">
 			<DialogContainer
@@ -29,6 +39,7 @@ export default function CreateProject() {
 				openButtonText="Create Project"
 				closeButtonText="Cancel"
 			>
+				{error && <ErrorBanner>{error}</ErrorBanner>}
 				<ProjectEditor />
 			</DialogContainer>
 		</Form>

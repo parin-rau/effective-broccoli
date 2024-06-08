@@ -5,6 +5,7 @@ type Props = {
 	progressDecimal: number;
 	childBarStyles: React.CSSProperties;
 	uom: string;
+	containerStyles?: string;
 };
 
 export default function ProgressBar({
@@ -13,9 +14,10 @@ export default function ProgressBar({
 	progressPercent,
 	childBarStyles,
 	uom,
+	containerStyles,
 }: Props) {
 	return (
-		<div className="flex flex-col gap-2">
+		<div className={`px-2 pb-2 flex flex-col gap-2 ${containerStyles}`}>
 			<span>
 				{progressPercent} - {completed}/{total} {uom}
 			</span>

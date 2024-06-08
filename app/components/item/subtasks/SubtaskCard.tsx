@@ -1,15 +1,13 @@
 import BorderContainer from "~/components/container/BorderContainer";
 import { Subtask } from "../itemTypes";
 
-interface Props extends Subtask {
-	children: React.ReactNode;
+function CompletedCard() {
+	return <BorderContainer></BorderContainer>;
 }
 
-const onClick =
-	(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-	(subtaskId: string) => {
-		const {} = e.target;
-	};
+function IncompleteCard() {
+	return <BorderContainer></BorderContainer>;
+}
 
 export default function SubtaskCard(props: Props) {
 	return (
