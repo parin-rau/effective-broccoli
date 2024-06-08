@@ -4,8 +4,8 @@ import BasicContainer from "~/components/container/BasicContainer";
 
 type Props = {
 	title?: string;
-	description?: string;
-	externalLink?: string;
+	description?: string | null;
+	externalLink?: string | null;
 };
 
 export default function ProjectEditor({
@@ -19,20 +19,20 @@ export default function ProjectEditor({
 				name="title"
 				label="Title"
 				placeholder="Enter Project Title"
-				defaultValue={title}
+				defaultValue={title ?? ""}
 				required
 			/>
 			<TextareaInput
 				name="description"
 				label="Description"
 				placeholder="Enter Project Description (Optional)"
-				defaultValue={description}
+				defaultValue={description ?? ""}
 			/>
 			<TextInput
 				name="externalLink"
 				label="External Resource"
 				placeholder="Enter External Resource URL (Optional)"
-				defaultValue={externalLink}
+				defaultValue={externalLink ?? ""}
 			/>
 		</BasicContainer>
 	);

@@ -1,10 +1,8 @@
 import { PrismaClient, Project } from "@prisma/client";
-//import { ProjectCardProps } from "~/components/item/itemTypes";
-import { json } from "@remix-run/node";
 import crypto from "crypto";
 import { processProjectData } from "./utils/dataProcessing";
-//import { toTimestampString } from "./utils/dateConversion";
-//import { getProgressStats } from "./utils/progressPercent";
+import { ProjectCardProps } from "~/components/item/itemTypes";
+import { DataResponse } from "./utils/dataResponse";
 
 const prisma = new PrismaClient();
 
@@ -18,7 +16,7 @@ export async function createProject({
 	title: string;
 	description?: string;
 	externalLink?: string;
-}) {
+}): Promise<DataResponse<{ projectId?: string }>> {
 	const { projectId } = await prisma.project.create({
 		data: {
 			userId,
@@ -32,7 +30,7 @@ export async function createProject({
 			projectId: true,
 		},
 	});
-	return json({ projectId }, 201);
+	return new DataResponse({ data: { projectId } }, 200);
 }
 
 export async function getProject({
@@ -41,7 +39,7 @@ export async function getProject({
 }: {
 	userId: string;
 	projectId: string;
-}) {
+}): Promise<DataResponse<ProjectCardProps>> {
 	const project = await prisma.project.findUnique({
 		where: { projectId, userId },
 		include: {
@@ -51,13 +49,15 @@ export async function getProject({
 		},
 	});
 	if (!project) {
-		return json({ error: "Project not found" }, 404);
+		return new DataResponse({ error: "Project not found" }, 404);
 	}
-	const processed = processProjectData(project);
-	return json({ project: processed }, 200);
+	const processedProject = processProjectData(project);
+	return new DataResponse({ data: processedProject }, 200);
 }
 
-export async function getProjectsByUserId(userId: string) {
+export async function getProjectsByUserId(
+	userId: string
+): Promise<DataResponse<ProjectCardProps[]>> {
 	const projects = await prisma.project.findMany({
 		where: {
 			userId,
@@ -68,11 +68,13 @@ export async function getProjectsByUserId(userId: string) {
 			},
 		},
 	});
-	const processed = projects.map((p) => processProjectData(p));
-	return json({ projects: processed }, 200);
+	const processedProjects = projects.map((p) => processProjectData(p));
+	return new DataResponse({ data: processedProjects }, 200);
 }
 
-export async function getAllProjects() {
+export async function getAllProjects(): Promise<
+	DataResponse<ProjectCardProps[]>
+> {
 	const projects = await prisma.project.findMany({
 		include: {
 			tasks: {
@@ -80,7 +82,10 @@ export async function getAllProjects() {
 			},
 		},
 	});
-	return json({ projects }, 200);
+	const processedProjects = projects.map((project) =>
+		processProjectData(project)
+	);
+	return new DataResponse({ data: processedProjects }, 200);
 }
 
 export async function updateProject({
@@ -91,7 +96,7 @@ export async function updateProject({
 	projectId: string;
 	userId: string;
 	data: Partial<Project>;
-}) {
+}): Promise<DataResponse<ProjectCardProps>> {
 	const project = await prisma.project.update({
 		where: {
 			projectId,
@@ -102,8 +107,12 @@ export async function updateProject({
 		},
 		data,
 	});
-	const processed = processProjectData(project);
-	return json({ project: processed }, 200);
+	if (!project) {
+		return new DataResponse({ error: "Unable to update project" }, 400);
+	}
+
+	const processedProject = processProjectData(project);
+	return new DataResponse({ data: processedProject }, 200);
 }
 
 export async function deleteProject({
@@ -112,7 +121,7 @@ export async function deleteProject({
 }: {
 	projectId: string;
 	userId: string;
-}) {
+}): Promise<DataResponse<ProjectCardProps>> {
 	const [project, tasks, subtasks] = await prisma.$transaction([
 		prisma.project.delete({ where: { projectId, userId } }),
 		prisma.task.deleteMany({ where: { projectId, userId } }),
@@ -120,13 +129,13 @@ export async function deleteProject({
 	]);
 
 	if (!project) {
-		return json({ message: "Project not deleted" }, 400);
+		return new DataResponse({ error: "Project not deleted" }, 400);
 	} else if (tasks || subtasks) {
-		return json(
+		return new DataResponse(
 			{ message: "Project and all associated tasks/subtasks deleted" },
 			200
 		);
 	} else {
-		return json({ message: "Project deleted" }, 200);
+		return new DataResponse({ message: "Project deleted" }, 200);
 	}
 }

@@ -1,8 +1,9 @@
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
+import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import { Form, useActionData, useParams } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import DialogContainer from "~/components/container/DialogContainer";
 import ErrorBanner from "~/components/ui/ErrorBanner";
+import MessageBanner from "~/components/ui/MessageBanner";
 import WarningBanner from "~/components/ui/WarningBanner";
 import { deleteProject } from "~/queries/projects.server";
 
@@ -12,23 +13,23 @@ export async function action({ request, params }: ActionFunctionArgs) {
 		return redirect("/projects");
 	}
 
-	const res = await deleteProject({
+	const { message, error, statusCode } = await deleteProject({
 		userId,
 		projectId: params.projectId,
 	});
-	const { message } = await res.json();
-
-	return res.ok ? redirect("/projects") : { error: message };
+	return error ? json({ message, error }, statusCode) : redirect("/projects");
 }
 
 export default function DeleteProject() {
 	const { projectId } = useParams();
 	const actionData = useActionData<typeof action>();
 	const error = actionData?.error;
+	const message = actionData?.message;
 
 	return (
 		<>
 			{error && <ErrorBanner>{error}</ErrorBanner>}
+			{message && <MessageBanner>{message}</MessageBanner>}
 			<Form method="delete" action={`/projects/${projectId}/delete`}>
 				<DialogContainer
 					headerText="Delete Project"

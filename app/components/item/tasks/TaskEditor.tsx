@@ -42,10 +42,10 @@ export default function TaskEditor({
 			/>
 			<label htmlFor="priority-select">Task Priority</label>
 			<select id="priority-select" defaultValue={priority}>
-				<option value="">Select Task Priority</option>
-				<option value="low">Low</option>
-				<option value="medium">Medium</option>
-				<option value="high">High</option>
+				<option value="0">Select Task Priority</option>
+				<option value="0">Low</option>
+				<option value="1">Medium</option>
+				<option value="2">High</option>
 			</select>
 			<input
 				name="due"

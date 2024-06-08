@@ -1,8 +1,8 @@
 import { PrismaClient, Task } from "@prisma/client";
-import { TypedResponse, json } from "@remix-run/node";
 import crypto from "crypto";
 import { processTaskData } from "./utils/dataProcessing";
-import { ProjectCardProps, TaskCardProps } from "~/components/item/itemTypes";
+import { TaskCardProps } from "~/components/item/itemTypes";
+import { DataResponse } from "./utils/dataResponse";
 
 type CreateTask = {
 	userId: string;
@@ -16,47 +16,9 @@ type CreateTask = {
 
 const prisma = new PrismaClient();
 
-type ResponseData<T> = {
-	item?: T | null;
-	items?: T[] | null;
-	error?: string | null;
-	message?: string | null;
-};
-
-type ResponseProps<T> = {
-	data: ResponseData<T>;
-	httpCode: number;
-	jsonify: () => TypedResponse<ResponseData<T>>;
-};
-
-class ResponseWithData<T> implements ResponseData<T> {
-	data: ResponseData<T>;
-	httpCode: number;
-
-	constructor(
-		{ item, items, error, message }: ResponseData<T>,
-		httpCode?: number
-	) {
-		this.data = {
-			item: item ?? null,
-			items: items ?? null,
-			error: error ?? null,
-			message: message ?? null,
-		};
-		this.httpCode = httpCode ?? 200;
-	}
-
-	jsonify() {
-		return json(
-			{
-				...this.data,
-			},
-			this.httpCode
-		);
-	}
-}
-
-export async function createTask(formData: CreateTask) {
+export async function createTask(
+	formData: CreateTask
+): Promise<DataResponse<{ taskId?: string }>> {
 	const task = await prisma.task.create({
 		data: {
 			...formData,
@@ -65,15 +27,15 @@ export async function createTask(formData: CreateTask) {
 		},
 	});
 	if (!task) {
-		return new ResponseWithData(
+		return new DataResponse(
 			{
 				error: "Failed to create task",
 			},
 			400
 		);
 	}
-	const processed = processTaskData(task);
-	return new ResponseWithData({ item: processed }, 200).jsonify();
+	//const processed = processTaskData(task);
+	return new DataResponse({ data: { taskId: task.taskId } }, 200);
 }
 
 export async function getTask({
@@ -82,16 +44,16 @@ export async function getTask({
 }: {
 	taskId: string;
 	userId: string;
-}) {
+}): Promise<DataResponse<TaskCardProps>> {
 	const task = await prisma.task.findUnique({
 		where: { taskId, userId },
 		include: { subtasks: true },
 	});
 	if (!task) {
-		return new ResponseWithData({ error: "Task not found" }, 400);
+		return new DataResponse({ error: "Task not found" }, 400);
 	}
 	const processed = processTaskData(task);
-	return new ResponseWithData({ item: processed }, 200).jsonify();
+	return new DataResponse({ data: processed }, 200);
 }
 
 export async function getTasksByProjectId({
@@ -100,30 +62,32 @@ export async function getTasksByProjectId({
 }: {
 	userId: string;
 	projectId: string;
-}) {
+}): Promise<DataResponse<TaskCardProps[]>> {
 	const tasks = await prisma.task.findMany({
 		where: { userId, projectId },
 		include: { subtasks: true },
 	});
 	const processed = tasks.map((task) => processTaskData(task));
-	return new ResponseWithData({ items: processed }, 200).jsonify();
+	return new DataResponse({ data: processed }, 200);
 }
 
-export async function getTasksByUserId(userId: string) {
+export async function getTasksByUserId(
+	userId: string
+): Promise<DataResponse<TaskCardProps[]>> {
 	const tasks = await prisma.task.findMany({
 		where: { userId },
 		include: { subtasks: true },
 	});
 	const processed = tasks.map((task) => processTaskData(task));
-	return new ResponseWithData({ items: processed }, 200).jsonify();
+	return new DataResponse({ data: processed }, 200);
 }
 
-export async function getAllTasks() {
+export async function getAllTasks(): Promise<DataResponse<TaskCardProps[]>> {
 	const tasks = await prisma.task.findMany({
 		include: { subtasks: true },
 	});
 	const processed = tasks.map((task) => processTaskData(task));
-	return new ResponseWithData({ items: processed }, 200).jsonify();
+	return new DataResponse({ data: processed }, 200);
 }
 
 export async function updateTask({
@@ -134,10 +98,10 @@ export async function updateTask({
 	userId: string;
 	taskId: string;
 	data: Partial<Task>;
-}) {
+}): Promise<DataResponse<TaskCardProps>> {
 	const task = await prisma.task.update({ where: { userId, taskId }, data });
 	const processed = processTaskData(task);
-	return new ResponseWithData({ item: processed }, 200).jsonify();
+	return new DataResponse({ data: processed }, 200);
 }
 
 export async function deleteTask({
@@ -146,31 +110,19 @@ export async function deleteTask({
 }: {
 	userId: string;
 	taskId: string;
-}) {
+}): Promise<DataResponse<TaskCardProps>> {
 	const [task, subtasks] = await prisma.$transaction([
 		prisma.task.delete({ where: { taskId, userId } }),
 		prisma.subtask.deleteMany({ where: { taskId, userId } }),
 	]);
 	if (!task) {
-		return new ResponseWithData(
-			{
-				error: "Task not deleted",
-			},
-			400
-		).jsonify();
+		return new DataResponse({ error: "Task not deleted" }, 400);
 	} else if (subtasks) {
-		return new ResponseWithData(
-			{
-				message: "Task and all associated subtasks deleted",
-			},
+		return new DataResponse(
+			{ message: "Task and all associated subtasks deleted" },
 			200
 		);
 	} else {
-		return new ResponseWithData(
-			{
-				message: "Task deleted",
-			},
-			200
-		).jsonify();
+		return new DataResponse({ message: "Task deleted" }, 200);
 	}
 }

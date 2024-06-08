@@ -1,4 +1,9 @@
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
+import {
+	ActionFunctionArgs,
+	LoaderFunctionArgs,
+	json,
+	redirect,
+} from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
 import { authCookie } from "~/auth";
 import BasicContainer from "~/components/container/BasicContainer";
@@ -8,33 +13,52 @@ import PasswordInput from "~/components/ui/PasswordInput";
 import StyledButton from "~/components/ui/StyledButton";
 import TextInput from "~/components/ui/TextInput";
 import ErrorMessage from "~/components/ui/ErrorMessage";
-import { createUser } from "~/queries/users.server";
+import { createUser, userExists } from "~/queries/users.server";
 import { validateSignup } from "~/utils/validate";
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export async function action({ request }: ActionFunctionArgs) {
 	const formData = await request.formData();
 	const username = String(formData.get("username"));
 	const password = String(formData.get("password"));
 	const passwordConfirm = String(formData.get("passwordConfirm"));
 
-	const errors = await validateSignup(username, password, passwordConfirm);
-	if (errors) {
-		return { errors };
+	const validationError = await validateSignup(
+		username,
+		password,
+		passwordConfirm
+	);
+	if (validationError) {
+		return json({ error: validationError }, 400);
 	}
 
-	const res = await createUser(username, password);
-	const { userId } = await res.json();
-	return redirect("/", {
-		headers: {
-			"Set-Cookie": await authCookie.serialize(userId),
-		},
-	});
-};
+	const userNotInDb = await userExists(username);
+	if (userNotInDb.error || userNotInDb?.data?.exists) {
+		return json({ error: userNotInDb.error }, userNotInDb.statusCode);
+	}
+
+	const { data, error, statusCode } = await createUser(username, password);
+	return data?.userId
+		? redirect("/", {
+				headers: {
+					"Set-Cookie": await authCookie.serialize(data.userId),
+				},
+		  })
+		: json({ error }, statusCode);
+}
+
+export async function loader({ request }: LoaderFunctionArgs) {
+	const cookie = request.headers.get("Cookie");
+	const userId = await authCookie.parse(cookie);
+	if (userId) {
+		throw redirect("/");
+	} else {
+		return null;
+	}
+}
 
 export default function SignUp() {
 	const actionData = useActionData<typeof action>();
-	const usernameError = actionData?.errors?.username;
-	const passwordError = actionData?.errors?.password;
+	const error = actionData?.error;
 
 	return (
 		<Form method="post" className="w-full">
@@ -42,18 +66,13 @@ export default function SignUp() {
 				<BorderContainer largeGap dynamicSizing>
 					<h2 className="font-bold text-2xl">Register New User</h2>
 					<BasicContainer styles="px-0">
-						{usernameError && (
-							<ErrorMessage message={usernameError} />
-						)}
+						{error && <ErrorMessage message={error} />}
 						<TextInput
 							name="username"
 							label="Username"
 							placeholder="Enter Username"
 							required
 						/>
-						{passwordError && (
-							<ErrorMessage message={passwordError} />
-						)}
 						<PasswordInput
 							name="password"
 							label="Password"

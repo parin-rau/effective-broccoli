@@ -4,6 +4,7 @@ import TextInput from "../components/ui/TextInput";
 import {
 	ActionFunctionArgs,
 	LoaderFunctionArgs,
+	json,
 	redirect,
 } from "@remix-run/node";
 import BorderContainer from "../components/container/BorderContainer";
@@ -21,22 +22,22 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	const password = String(formData.get("password"));
 	const passwordConfirm = String(formData.get("passwordConfirm"));
 
-	const errors = await validateLogin(password, passwordConfirm);
-	if (errors) {
-		return { errors };
+	const validateErrors = validateLogin(password, passwordConfirm);
+	if (validateErrors) {
+		return { error: validateErrors };
 	}
 
-	const res = await loginUser(username, password);
-	const user = await res.json();
-	if (user.errors) {
-		return { errors: user.errors };
-	}
-
-	return redirect("/", {
-		headers: {
-			"Set-Cookie": await authCookie.serialize(user.userId),
-		},
-	});
+	const { data, message, error, statusCode } = await loginUser(
+		username,
+		password
+	);
+	return data?.userId
+		? redirect("/", {
+				headers: {
+					"Set-Cookie": await authCookie.serialize(data.userId),
+				},
+		  })
+		: json({ data, message, error }, statusCode);
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -51,8 +52,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Login() {
 	const actionData = useActionData<typeof action>();
-	const usernameError = actionData?.errors?.username;
-	const passwordError = actionData?.errors?.password;
+	const error = actionData?.error;
 
 	return (
 		<Form method="post" className="w-full">
@@ -60,18 +60,13 @@ export default function Login() {
 				<BorderContainer largeGap dynamicSizing>
 					<h2 className="font-bold text-2xl">Log In</h2>
 					<BasicContainer styles="px-0">
-						{usernameError && (
-							<ErrorMessage message={usernameError} />
-						)}
+						{error && <ErrorMessage message={error} />}
 						<TextInput
 							name="username"
 							label="Username"
 							placeholder="Enter Username"
 							required
 						/>
-						{passwordError && (
-							<ErrorMessage message={passwordError} />
-						)}
 						<PasswordInput
 							name="password"
 							label="Password"

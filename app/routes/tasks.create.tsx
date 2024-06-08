@@ -12,22 +12,23 @@ export async function action({ request }: ActionFunctionArgs) {
 	const title = String(formData.get("title"));
 	const description = String(formData.get("description"));
 	const externalLink = String(formData.get("externalLink"));
-	const priority = String(formData.get("priority"));
+	const priority = Number(formData.get("priority"));
 	const due = String(formData.get("due"));
 	const projectId = String(formData.get("projectId"));
 
-	const { taskId } = await (
-		await createTask({
-			userId,
-			projectId,
-			title,
-			description,
-			externalLink,
-			priority,
-			due,
-		})
-	).json();
-	return redirect(`/tasks/${taskId}`);
+	const { data } = await createTask({
+		userId,
+		projectId,
+		title,
+		description,
+		externalLink,
+		priority,
+		due,
+	});
+
+	return redirect(
+		data?.taskId ? `/tasks/${data.taskId}` : `/projects/${projectId}`
+	);
 }
 
 export default function CreateTask({ projectId }: { projectId: string }) {
