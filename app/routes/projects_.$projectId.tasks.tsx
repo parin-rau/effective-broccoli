@@ -1,10 +1,7 @@
 import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
-import GridContainer from "~/components/container/GridContainer";
-import PageHeading from "~/components/container/PageHeading";
-import TableGrid from "~/components/container/TableGrid";
-import TaskCard from "~/components/item/tasks/TaskCard";
+import TaskTable from "~/components/item/tasks/TaskTable";
 import TaskRow from "~/components/item/tasks/TaskRow";
 import ErrorBanner from "~/components/ui/ErrorBanner";
 import MessageBanner from "~/components/ui/MessageBanner";
@@ -35,15 +32,8 @@ export default function TaskFeedForProject() {
 			{error && <ErrorBanner>{error}</ErrorBanner>}
 			{message && <MessageBanner>{message}</MessageBanner>}
 			{tasks && (
-				<TableGrid
+				<TaskTable
 					title="Tasks"
-					columns={[
-						"Title",
-						"Progress",
-						"Due",
-						"Priority",
-						"Created",
-					]}
 					containerButtons={
 						<CreateTask projectId={tasks[0].projectId} />
 					}
@@ -51,7 +41,7 @@ export default function TaskFeedForProject() {
 					{tasks.map((task) => (
 						<TaskRow key={task.taskId} {...{ ...task }} />
 					))}
-				</TableGrid>
+				</TaskTable>
 			)}
 		</div>
 	);

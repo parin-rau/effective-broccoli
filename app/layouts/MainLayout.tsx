@@ -5,7 +5,7 @@ export default function MainLayout() {
 	return (
 		<div className="flex">
 			<Navbar />
-			<div className="w-full">
+			<div className="relative w-full">
 				<Outlet />
 			</div>
 		</div>

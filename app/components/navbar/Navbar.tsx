@@ -5,7 +5,7 @@ import NavbarLink from "./NavbarLink";
 
 export default function Navbar() {
 	return (
-		<BasicContainer styles="w-40 h-screen border-r border-neutral-500 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
+		<BasicContainer styles="w-40 h-screen sticky hidden sm:flex border-r border-neutral-500 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
 			<NavbarLink text="Home" to="/" />
 			<NavbarLink text="Projects" to="/projects" />
 			<NavbarLink text="Tasks" to="/tasks" />

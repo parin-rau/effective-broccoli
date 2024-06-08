@@ -4,7 +4,7 @@ type Props = {
 	progressPercent: string;
 	progressDecimal: number;
 	childBarStyles: React.CSSProperties;
-	uom: string;
+	uom?: string;
 	containerStyles?: string;
 };
 
