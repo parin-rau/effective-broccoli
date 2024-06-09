@@ -14,10 +14,9 @@ type Props = {
 };
 
 const priorityOptions: SelectProps["options"] = [
-	{ label: "Select Task Priority", value: 0 },
-	{ label: "Low", value: 0 },
-	{ label: "Medium", value: 1 },
-	{ label: "High", value: 2 },
+	{ label: "Low", value: "0" },
+	{ label: "Medium", value: "1" },
+	{ label: "High", value: "2" },
 ];
 
 export default function TaskEditor({
@@ -29,6 +28,13 @@ export default function TaskEditor({
 }: Props) {
 	return (
 		<BasicContainer styles="gap-3">
+			{projectId && (
+				<input
+					type="hidden"
+					name="projectId"
+					defaultValue={projectId}
+				/>
+			)}
 			<TextInput
 				name="title"
 				label="Title"
@@ -63,8 +69,6 @@ export default function TaskEditor({
 					placeholder="Enter Due Date (Optional)"
 				/>
 			</div>
-
-			<input type="hidden" name="projectId" defaultValue={projectId} />
 		</BasicContainer>
 	);
 }

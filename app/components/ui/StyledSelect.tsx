@@ -1,7 +1,7 @@
 export type SelectProps = {
 	name: string;
 	label: string;
-	options: { label: string; value: number | string }[];
+	options: { label: string; value: string }[];
 	style?: React.CSSProperties;
 };
 
