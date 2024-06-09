@@ -7,7 +7,7 @@ export default function StatusDisplay({
 }) {
 	return (
 		<span
-			className={`px-3 py-2 w-fit rounded-md font-semibold ${
+			className={`px-2 py-1 w-fit rounded-md font-semibold ${
 				styles ?? ""
 			}`}
 		>

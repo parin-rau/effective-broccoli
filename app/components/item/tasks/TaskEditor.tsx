@@ -1,6 +1,8 @@
 import BasicContainer from "~/components/container/BasicContainer";
 import TextareaInput from "../../ui/TextareaInput";
 import TextInput from "../../ui/TextInput";
+import StyledInput from "~/components/ui/StyledInput";
+import StyledSelect, { SelectProps } from "~/components/ui/StyledSelect";
 
 type Props = {
 	title?: string;
@@ -11,10 +13,16 @@ type Props = {
 	projectId: string;
 };
 
+const priorityOptions: SelectProps["options"] = [
+	{ label: "Select Task Priority", value: 0 },
+	{ label: "Low", value: 0 },
+	{ label: "Medium", value: 1 },
+	{ label: "High", value: 2 },
+];
+
 export default function TaskEditor({
 	title,
 	description,
-	priority,
 	externalLink,
 	due,
 	projectId,
@@ -40,19 +48,22 @@ export default function TaskEditor({
 				defaultValue={externalLink}
 				placeholder="Enter External Resource URL (Optional)"
 			/>
-			<label htmlFor="priority-select">Task Priority</label>
-			<select id="priority-select" defaultValue={priority}>
-				<option value="0">Select Task Priority</option>
-				<option value="0">Low</option>
-				<option value="1">Medium</option>
-				<option value="2">High</option>
-			</select>
-			<input
-				name="due"
-				defaultValue={due}
-				type="date"
-				placeholder="Enter Due Date (Optional)"
-			/>
+
+			<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+				<StyledSelect
+					name="priority"
+					label="Priority"
+					options={priorityOptions}
+				/>
+				<StyledInput
+					name="due"
+					label="Due Date"
+					defaultValue={due}
+					type="date"
+					placeholder="Enter Due Date (Optional)"
+				/>
+			</div>
+
 			<input type="hidden" name="projectId" defaultValue={projectId} />
 		</BasicContainer>
 	);
