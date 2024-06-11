@@ -25,7 +25,7 @@ export default function TaskCard({
 	const isCurrentLocation = params.taskId === taskId;
 
 	return (
-		<div className="p-1 grid grid-cols-3 border-y border-neutral-500 items-center">
+		<BorderContainer>
 			{isCurrentLocation ? (
 				<>
 					<SpreadContainer>
@@ -64,6 +64,6 @@ export default function TaskCard({
 			<ProgressBar
 				{...{ ...progress.subtaskCompletion, uom: "Subtasks" }}
 			/>
-		</div>
+		</BorderContainer>
 	);
 }

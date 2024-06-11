@@ -5,11 +5,11 @@ import StyledInput from "~/components/ui/StyledInput";
 import StyledSelect, { SelectProps } from "~/components/ui/StyledSelect";
 
 type Props = {
-	title?: string;
-	description?: string;
-	priority?: number;
-	externalLink?: string;
-	due?: string;
+	title?: string | null;
+	description?: string | null;
+	priority?: number | null;
+	externalLink?: string | null;
+	due?: string | null;
 	projectId: string;
 };
 
@@ -38,20 +38,20 @@ export default function TaskEditor({
 			<TextInput
 				name="title"
 				label="Title"
-				defaultValue={title}
+				defaultValue={title ?? ""}
 				placeholder="Enter Task Title"
 				required
 			/>
 			<TextareaInput
 				name="description"
 				label="Description"
-				defaultValue={description}
+				defaultValue={description ?? ""}
 				placeholder="Enter Task Description (Optional)"
 			/>
 			<TextInput
 				name="externalLink"
 				label="External Resource"
-				defaultValue={externalLink}
+				defaultValue={externalLink ?? ""}
 				placeholder="Enter External Resource URL (Optional)"
 			/>
 
@@ -64,7 +64,7 @@ export default function TaskEditor({
 				<StyledInput
 					name="due"
 					label="Due Date"
-					defaultValue={due}
+					defaultValue={due ?? ""}
 					type="date"
 					placeholder="Enter Due Date (Optional)"
 				/>

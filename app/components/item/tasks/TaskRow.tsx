@@ -6,7 +6,7 @@ import TagCards from "./TagCards";
 
 type TaskRowProps = Omit<TaskCardProps, "projectId" | "description">;
 
-export default function TaskCard({
+export default function TaskRow({
 	taskId,
 	title,
 	timestamp,
@@ -17,7 +17,7 @@ export default function TaskCard({
 	return (
 		<div>
 			<Link
-				to={`/tasks/${taskId}`}
+				to={`/tasks/${taskId}/subtasks`}
 				className="py-1 grid grid-cols-9 gap-2 items-center rounded-lg hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-800 dark:active:bg-neutral-700"
 			>
 				<div className="w-full h-full p-2 col-span-3">

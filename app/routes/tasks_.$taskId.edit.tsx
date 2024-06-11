@@ -56,17 +56,25 @@ export default function EditTask() {
 		<>
 			{message && <MessageBanner>{message}</MessageBanner>}
 			{error && <ErrorBanner>{error}</ErrorBanner>}
-			<Form method="post" action="/tasks/create">
-				{data?.projectId && (
-					<DialogContainer
-						headerText="Create New Task"
-						openButtonText="Create Task"
-						closeButtonText="Cancel"
-					>
-						<TaskEditor projectId={data.projectId} />
-					</DialogContainer>
-				)}
-			</Form>
+			{data?.taskId && (
+				<Form method="post" action={`/tasks/${data.taskId}/edit`}>
+					{data?.projectId && (
+						<DialogContainer
+							headerText="Editing Task"
+							openButtonText="Edit Task"
+							closeButtonText="Cancel"
+						>
+							<TaskEditor
+								{...{
+									...data,
+									priority: data.priority.value,
+									due: data.due.date,
+								}}
+							/>
+						</DialogContainer>
+					)}
+				</Form>
+			)}
 		</>
 	);
 }
