@@ -5,7 +5,7 @@ import GridContainer from "~/components/container/GridContainer";
 import ProjectCard from "~/components/item/projects/ProjectCard";
 import NewProject from "./projects.create";
 import SpreadContainer from "~/components/container/SpreadContainer";
-import PageHeading from "~/components/container/PageHeading";
+import PageHeading from "~/components/text/PageHeading";
 import { requireAuthCookie } from "~/auth";
 import { getProjectsByUserId } from "~/queries/projects.server";
 import ErrorBanner from "~/components/ui/ErrorBanner";
@@ -30,7 +30,7 @@ export default function ProjectHome() {
 			{error && <ErrorBanner>{error}</ErrorBanner>}
 			{message && <MessageBanner>{message}</MessageBanner>}
 			<SpreadContainer>
-				<PageHeading>Projects Home</PageHeading>
+				<PageHeading>All Projects</PageHeading>
 				<NewProject />
 			</SpreadContainer>
 			<GridContainer>

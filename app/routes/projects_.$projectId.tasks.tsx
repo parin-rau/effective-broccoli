@@ -35,7 +35,7 @@ export default function TaskFeedForProject() {
 				<TaskTable
 					title="Tasks"
 					containerButtons={
-						<CreateTask projectId={tasks[0].projectId} />
+						<CreateTask projectId={tasks[0].project.projectId} />
 					}
 				>
 					{tasks.map((task) => (

@@ -2,8 +2,9 @@ import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import BasicContainer from "~/components/container/BasicContainer";
-import GridContainer from "~/components/container/GridContainer";
-import TaskCard from "~/components/item/tasks/TaskCard";
+import TaskRow from "~/components/item/tasks/TaskRow";
+import TaskTable from "~/components/item/tasks/TaskTable";
+import PageHeading from "~/components/text/PageHeading";
 import ErrorBanner from "~/components/ui/ErrorBanner";
 import MessageBanner from "~/components/ui/MessageBanner";
 import { getTasksByUserId } from "~/queries/tasks.server";
@@ -24,12 +25,15 @@ export default function TasksHome() {
 		<BasicContainer>
 			{message && <MessageBanner>{message}</MessageBanner>}
 			{error && <ErrorBanner>{error}</ErrorBanner>}
-			<GridContainer>
+			<div className="p-2">
+				<PageHeading>All Tasks</PageHeading>
+			</div>
+			<TaskTable>
 				{tasks &&
 					tasks.map((task) => (
-						<TaskCard key={task.taskId} {...{ ...task }} />
+						<TaskRow key={task.taskId} {...{ ...task }} />
 					))}
-			</GridContainer>
+			</TaskTable>
 		</BasicContainer>
 	);
 }

@@ -34,12 +34,11 @@ export function getTaskPriority(priorityCode: number, onHold?: boolean) {
 }
 
 export function getTaskDue(due?: string | null): {
-	modifier: string;
 	styles: string;
 	date: string;
 } {
 	if (!due) {
-		return { modifier: "", styles: "", date: "" };
+		return { styles: "", date: "" };
 	}
 
 	const currentDate = new Date();
@@ -55,17 +54,33 @@ export function getTaskDue(due?: string | null): {
 	const [cYear, cMonth, cDay, cTime] = getDateStats(currentDate);
 	const [dYear, dMonth, dDay, dTime] = getDateStats(dueDate);
 
-	const formattedDue = "";
 	if (dTime < cTime) {
 		return {
-			modifier: "Overdue",
-			styles: "text-emerald-600",
-			date: formattedDue,
+			styles: "text-red-500",
+			date: dueDate.toLocaleDateString("en-US", {
+				month: "numeric",
+				day: "numeric",
+			}),
 		};
 	} else if (cYear === dYear && cMonth === dMonth && cDay === dDay) {
-		return { modifier: "Today", styles: "text-red", date: formattedDue };
+		return { styles: "text-amber-500", date: "Today" };
+	} else if (cYear !== dYear) {
+		return {
+			styles: "",
+			date: dueDate.toLocaleDateString("en-US", {
+				year: "2-digit",
+				month: "numeric",
+				day: "numeric",
+			}),
+		};
 	} else {
-		return { modifier: "", styles: "", date: formattedDue };
+		return {
+			styles: "",
+			date: dueDate.toLocaleDateString("en-US", {
+				month: "numeric",
+				day: "numeric",
+			}),
+		};
 	}
 }
 

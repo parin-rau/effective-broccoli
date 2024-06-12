@@ -55,7 +55,9 @@ export function processProjectData(
 }
 
 export function processTaskData(
-	task: Task & { subtasks?: Subtask[] }
+	task: Task & { subtasks?: Subtask[] } & {
+		project: { projectId: string; title: string };
+	}
 ): TaskCardProps {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { userId, ...restTask } = task; // removing userId from task
@@ -74,6 +76,10 @@ export function processTaskData(
 
 	return {
 		...restTask,
+		project: {
+			projectId: task.project.projectId,
+			title: task.project.title,
+		},
 		due: getTaskDue(task.due),
 		priority: getTaskPriority(task.priority),
 		timestamp: toTimestampString(Number(task.timestamp)),

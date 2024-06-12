@@ -47,7 +47,10 @@ export async function getTask({
 }): Promise<DataResponse<TaskCardProps>> {
 	const task = await prisma.task.findUnique({
 		where: { taskId, userId },
-		include: { subtasks: true },
+		include: {
+			subtasks: true,
+			project: { select: { projectId: true, title: true } },
+		},
 	});
 	if (!task) {
 		return new DataResponse({ error: "Task not found" }, 400);
@@ -65,7 +68,10 @@ export async function getTasksByProjectId({
 }): Promise<DataResponse<TaskCardProps[]>> {
 	const tasks = await prisma.task.findMany({
 		where: { userId, projectId },
-		include: { subtasks: true },
+		include: {
+			subtasks: true,
+			project: { select: { projectId: true, title: true } },
+		},
 	});
 	const processed = tasks.map((task) => processTaskData(task));
 	return new DataResponse({ data: processed }, 200);
@@ -76,7 +82,10 @@ export async function getTasksByUserId(
 ): Promise<DataResponse<TaskCardProps[]>> {
 	const tasks = await prisma.task.findMany({
 		where: { userId },
-		include: { subtasks: true },
+		include: {
+			subtasks: true,
+			project: { select: { projectId: true, title: true } },
+		},
 	});
 	const processed = tasks.map((task) => processTaskData(task));
 	return new DataResponse({ data: processed }, 200);
@@ -84,7 +93,10 @@ export async function getTasksByUserId(
 
 export async function getAllTasks(): Promise<DataResponse<TaskCardProps[]>> {
 	const tasks = await prisma.task.findMany({
-		include: { subtasks: true },
+		include: {
+			subtasks: true,
+			project: { select: { projectId: true, title: true } },
+		},
 	});
 	const processed = tasks.map((task) => processTaskData(task));
 	return new DataResponse({ data: processed }, 200);
@@ -99,7 +111,11 @@ export async function updateTask({
 	taskId: string;
 	data: Partial<Task>;
 }): Promise<DataResponse<TaskCardProps>> {
-	const task = await prisma.task.update({ where: { userId, taskId }, data });
+	const task = await prisma.task.update({
+		where: { userId, taskId },
+		data,
+		include: { project: { select: { projectId: true, title: true } } },
+	});
 	const processed = processTaskData(task);
 	return new DataResponse({ data: processed }, 200);
 }

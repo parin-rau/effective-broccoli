@@ -58,7 +58,7 @@ export default function EditTask() {
 			{error && <ErrorBanner>{error}</ErrorBanner>}
 			{data?.taskId && (
 				<Form method="post" action={`/tasks/${data.taskId}/edit`}>
-					{data?.projectId && (
+					{data?.project.projectId && (
 						<DialogContainer
 							headerText="Editing Task"
 							openButtonText="Edit Task"
@@ -67,6 +67,7 @@ export default function EditTask() {
 							<TaskEditor
 								{...{
 									...data,
+									projectId: data.project.projectId,
 									priority: data.priority.value,
 									due: data.due.date,
 								}}

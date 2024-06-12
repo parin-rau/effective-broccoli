@@ -1,11 +1,8 @@
-export type ItemHeader<T extends React.ReactNode> = {
+export type ItemHeader = {
 	id: string;
 	title: string;
-	description?: string | null;
-	timestamp: string;
 	to?: string;
 	headerButtons?: React.ReactNode;
-	extraFields?: T;
 };
 
 export type StatusDisplay = {
@@ -25,12 +22,12 @@ export type ProjectCardProps = {
 export type TaskCardProps = {
 	taskId: string;
 	//userId: string;
-	projectId: string;
+	project: { projectId: string; title: string };
 	title: string;
 	description: string | null;
 	externalLink: string | null;
 	timestamp: string;
-	due: { date: string; modifier: string; styles: string };
+	due: { date: string; styles: string };
 	priority: { value: number; text: string; styles: string };
 	subtasks?: SubtaskCardProps[];
 	progress: TaskCompletion;

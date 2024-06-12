@@ -1,18 +1,17 @@
-import { Link, useParams } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import BorderContainer from "~/components/container/BorderContainer";
 import { TaskCardProps } from "../itemTypes";
-import SpreadContainer from "~/components/container/SpreadContainer";
-import PageHeading from "~/components/container/PageHeading";
-import CreateSubtask from "~/routes/subtasks.create";
 import ItemHeader from "../ItemHeader";
 import DeleteTask from "~/routes/tasks_.$taskId.delete";
 import EditTask from "~/routes/tasks_.$taskId.edit";
 import ProgressBar from "../ProgressBar";
 import StatusDisplay from "~/components/ui/StatusDisplay";
+import ItalicText from "~/components/text/ItalicText";
+import BasicContainer from "~/components/container/BasicContainer";
 
 export default function TaskCard({
 	taskId,
-	projectId,
+	project,
 	title,
 	description,
 	timestamp,
@@ -20,52 +19,38 @@ export default function TaskCard({
 	due,
 	priority,
 }: TaskCardProps) {
-	const params = useParams();
-	const isCurrentLocation = params.taskId === taskId;
-
 	return (
 		<BorderContainer>
-			{/* {isCurrentLocation ? (
-				<>
-					<SpreadContainer>
-						<PageHeading>{title}</PageHeading>
-						<div className="flex gap-2">
-							<CreateSubtask
-								taskId={taskId}
-								projectId={projectId}
-							/>
-							<EditTask />
-							<DeleteTask />
-						</div>
-					</SpreadContainer>
-					<ItemHeader
-						description={description}
-						timestamp={timestamp}
-					/>
-				</>
-			) : (
-				<Link
-					to={`/tasks/${taskId}/subtasks`}
-					className="hover:text-blue-500 hover:bg-neutral-200 active:bg-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800 dark:active:bg-neutral-700 rounded-lg"
-				>
-					<ItemHeader title={title} timestamp={timestamp} />
-				</Link>
-			)} */}
 			<ItemHeader
-				{...{
-					id: taskId,
-					to: `/tasks/${taskId}/subtasks`,
-					title,
-					timestamp,
-				}}
-			></ItemHeader>
-			<div className="flex gap-2">
-				<span className={due.styles}>{due.date}</span>
-				<StatusDisplay
-					styles={priority.styles}
-					message={priority.text}
-				/>
-			</div>
+				id={taskId}
+				title={title}
+				headerButtons={
+					<>
+						<EditTask />
+						<DeleteTask />
+					</>
+				}
+			/>
+
+			<BasicContainer>
+				<ItalicText>{timestamp}</ItalicText>
+				<Link
+					to={`/projects/${project.projectId}/tasks`}
+					className="hover:underline"
+				>{`Project: ${project.title}`}</Link>
+				{due.date && (
+					<span className={due.styles}>Due: {due.date}</span>
+				)}
+				<span>
+					Priority:{" "}
+					<StatusDisplay
+						styles={priority.styles}
+						message={priority.text}
+					/>
+				</span>
+				{description && <p>{description}</p>}
+			</BasicContainer>
+
 			<ProgressBar
 				{...{ ...progress.subtaskCompletion, uom: "Subtasks" }}
 			/>

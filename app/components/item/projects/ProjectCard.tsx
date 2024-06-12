@@ -2,11 +2,11 @@ import BorderContainer from "~/components/container/BorderContainer";
 import ItemHeader from "../ItemHeader";
 import { ProjectCardProps } from "../itemTypes";
 import ProgressBar from "../ProgressBar";
-import { Link, useParams } from "@remix-run/react";
-import SpreadContainer from "~/components/container/SpreadContainer";
-import PageHeading from "~/components/container/PageHeading";
+import { useParams } from "@remix-run/react";
 import EditProject from "~/routes/projects_.$projectId.edit";
 import DeleteProject from "~/routes/projects_.$projectId.delete";
+import ItalicText from "~/components/text/ItalicText";
+import BasicContainer from "~/components/container/BasicContainer";
 
 export default function ProjectCard({
 	projectId,
@@ -14,39 +14,36 @@ export default function ProjectCard({
 	description,
 	timestamp,
 	progress,
+	externalLink,
 }: ProjectCardProps) {
 	const params = useParams();
 	const isCurrentLocation = params.projectId === projectId;
 
 	return (
 		<BorderContainer>
-			{isCurrentLocation ? (
-				<>
-					<SpreadContainer>
-						<PageHeading>{title}</PageHeading>
-						<div className="flex gap-2">
+			<ItemHeader
+				id={projectId}
+				title={title}
+				to={`/projects/${projectId}/tasks`}
+				headerButtons={
+					isCurrentLocation && (
+						<>
 							<EditProject />
 							<DeleteProject />
-						</div>
-					</SpreadContainer>
-					<ItemHeader
-						id={projectId}
-						title={title}
-						description={description}
-						timestamp={timestamp}
-					/>
-				</>
-			) : (
-				<Link
-					to={`/projects/${projectId}/tasks`}
-					className="hover:text-blue-500 hover:bg-neutral-200 active:bg-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800 dark:active:bg-neutral-700 rounded-lg"
-				>
-					<ItemHeader
-						id={projectId}
-						title={title}
-						timestamp={timestamp}
-					/>
-				</Link>
+						</>
+					)
+				}
+			/>
+			{isCurrentLocation && (
+				<BasicContainer>
+					<ItalicText>{timestamp}</ItalicText>
+					{description && <p>{description}</p>}
+					{externalLink && (
+						<a href={externalLink} className="hover:underline">
+							{externalLink}
+						</a>
+					)}
+				</BasicContainer>
 			)}
 			<ProgressBar {...{ ...progress.taskCompletion, uom: "Tasks" }} />
 			<ProgressBar
