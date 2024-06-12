@@ -8,7 +8,6 @@ import ItemHeader from "../ItemHeader";
 import DeleteTask from "~/routes/tasks_.$taskId.delete";
 import EditTask from "~/routes/tasks_.$taskId.edit";
 import ProgressBar from "../ProgressBar";
-import BasicContainer from "~/components/container/BasicContainer";
 import StatusDisplay from "~/components/ui/StatusDisplay";
 
 export default function TaskCard({
@@ -26,7 +25,7 @@ export default function TaskCard({
 
 	return (
 		<BorderContainer>
-			{isCurrentLocation ? (
+			{/* {isCurrentLocation ? (
 				<>
 					<SpreadContainer>
 						<PageHeading>{title}</PageHeading>
@@ -46,16 +45,22 @@ export default function TaskCard({
 				</>
 			) : (
 				<Link
-					to={`/tasks/${taskId}`}
-					className="hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-800 dark:active:bg-neutral-700 rounded-lg"
+					to={`/tasks/${taskId}/subtasks`}
+					className="hover:text-blue-500 hover:bg-neutral-200 active:bg-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800 dark:active:bg-neutral-700 rounded-lg"
 				>
 					<ItemHeader title={title} timestamp={timestamp} />
 				</Link>
-			)}
+			)} */}
+			<ItemHeader
+				{...{
+					id: taskId,
+					to: `/tasks/${taskId}/subtasks`,
+					title,
+					timestamp,
+				}}
+			></ItemHeader>
 			<div className="flex gap-2">
-				<span className={due.styles}>{`${due.date}${
-					due.modifier ? `(${due.modifier})` : ""
-				}`}</span>
+				<span className={due.styles}>{due.date}</span>
 				<StatusDisplay
 					styles={priority.styles}
 					message={priority.text}

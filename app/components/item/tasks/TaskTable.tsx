@@ -6,8 +6,8 @@ function TaskTableColumnNames() {
 		<div className="pl-2 grid items-center grid-cols-9 font-bold">
 			<span className="col-span-3">Title</span>
 			<span className="col-span-2 lg:col-span-1">Progress</span>
-			<span className="col-span-2 md:col-span-1">Priority</span>
-			<span className="col-span-2 lg:col-span-1">Due</span>
+			<span className="col-span-2 lg:col-span-1">Priority</span>
+			<span className="">Due</span>
 			<span className="hidden lg:block">Created</span>
 			<span className="hidden md:block lg:col-span-2">Tags</span>
 		</div>

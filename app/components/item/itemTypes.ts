@@ -1,9 +1,11 @@
-export type ItemHeader = {
-	title?: string;
+export type ItemHeader<T extends React.ReactNode> = {
+	id: string;
+	title: string;
 	description?: string | null;
 	timestamp: string;
-	status?: StatusDisplay;
-	priority?: StatusDisplay;
+	to?: string;
+	headerButtons?: React.ReactNode;
+	extraFields?: T;
 };
 
 export type StatusDisplay = {

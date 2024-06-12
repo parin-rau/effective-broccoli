@@ -16,26 +16,26 @@ export default function TaskRow({
 }: TaskRowProps) {
 	return (
 		<div>
-			<Link
-				to={`/tasks/${taskId}/subtasks`}
-				className="py-1 grid grid-cols-9 gap-2 items-center rounded-lg hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-800 dark:active:bg-neutral-700"
-			>
-				<div className="w-full h-full p-2 col-span-3">
+			<div className="py-1 grid grid-cols-9 gap-2 items-center rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-800 ">
+				<Link
+					to={`/tasks/${taskId}/subtasks`}
+					className="w-full h-full p-2 col-span-3 rounded-lg hover:text-blue-500 hover:bg-neutral-300 active:bg-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-700  dark:active:bg-neutral-600"
+				>
 					<h3 className="text-lg font-semibold">{title}</h3>
-				</div>
+				</Link>
 
 				<div className="col-span-2 lg:col-span-1">
 					<ProgressBar {...{ ...progress.subtaskCompletion }} />
 				</div>
 
-				<div className="col-span-2 md:col-span-1">
+				<div className="col-span-2 lg:col-span-1">
 					<StatusDisplay
 						styles={priority.styles}
 						message={priority.text}
 					/>
 				</div>
 
-				<div className="col-span-2 lg:col-span-1">
+				<div className="">
 					{due.date ? (
 						<span className={due.styles}>{`${due.date}${
 							due.modifier ? `(${due.modifier})` : ""
@@ -57,7 +57,7 @@ export default function TaskRow({
 						]}
 					/>
 				</div>
-			</Link>
+			</div>
 		</div>
 	);
 }

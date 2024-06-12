@@ -30,6 +30,8 @@ export default function ProjectCard({
 						</div>
 					</SpreadContainer>
 					<ItemHeader
+						id={projectId}
+						title={title}
 						description={description}
 						timestamp={timestamp}
 					/>
@@ -37,9 +39,13 @@ export default function ProjectCard({
 			) : (
 				<Link
 					to={`/projects/${projectId}/tasks`}
-					className="hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-800 dark:active:bg-neutral-700 rounded-lg"
+					className="hover:text-blue-500 hover:bg-neutral-200 active:bg-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800 dark:active:bg-neutral-700 rounded-lg"
 				>
-					<ItemHeader title={title} timestamp={timestamp} />
+					<ItemHeader
+						id={projectId}
+						title={title}
+						timestamp={timestamp}
+					/>
 				</Link>
 			)}
 			<ProgressBar {...{ ...progress.taskCompletion, uom: "Tasks" }} />
