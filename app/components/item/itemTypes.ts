@@ -27,7 +27,7 @@ export type TaskCardProps = {
 	description: string | null;
 	externalLink: string | null;
 	timestamp: string;
-	due: { date: string; styles: string };
+	due: { date: string; styles: string; value: string };
 	priority: { value: number; text: string; styles: string };
 	subtasks?: SubtaskCardProps[];
 	progress: TaskCompletion;
@@ -37,11 +37,12 @@ export type SubtaskCardProps = {
 	subtaskId: string;
 	//userId: string;
 	taskId: string;
-	projectId: string;
+	//projectId: string;
 	title: string;
-	description: string | null;
-	externalLink: string | null;
+	//description: string | null;
+	//externalLink: string | null;
 	timestamp: string;
+	progress: number;
 };
 
 type Completion = {

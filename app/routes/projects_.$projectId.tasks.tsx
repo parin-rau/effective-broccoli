@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useParams } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import TaskTable from "~/components/item/tasks/TaskTable";
 import TaskRow from "~/components/item/tasks/TaskRow";
@@ -22,6 +22,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function TaskFeedForProject() {
+	const params = useParams();
 	const loaderData = useLoaderData<typeof loader>();
 	const tasks = loaderData?.data;
 	const error = loaderData?.error;
@@ -31,16 +32,17 @@ export default function TaskFeedForProject() {
 		<div className="flex flex-col gap-4">
 			{error && <ErrorBanner>{error}</ErrorBanner>}
 			{message && <MessageBanner>{message}</MessageBanner>}
-			{tasks && (
+			{params.projectId && (
 				<TaskTable
 					title="Tasks"
 					containerButtons={
-						<CreateTask projectId={tasks[0].project.projectId} />
+						<CreateTask projectId={params.projectId} />
 					}
 				>
-					{tasks.map((task) => (
-						<TaskRow key={task.taskId} {...{ ...task }} />
-					))}
+					{tasks &&
+						tasks.map((task) => (
+							<TaskRow key={task.taskId} {...{ ...task }} />
+						))}
 				</TaskTable>
 			)}
 		</div>

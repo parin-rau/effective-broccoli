@@ -1,8 +1,9 @@
-import { PrismaClient, Task } from "@prisma/client";
+import { Task } from "@prisma/client";
 import crypto from "crypto";
 import { processTaskData } from "./utils/dataProcessing";
 import { TaskCardProps } from "~/components/item/itemTypes";
 import { DataResponse } from "./utils/dataResponse";
+import { prisma } from "prisma/prismaClient";
 
 type CreateTask = {
 	userId: string;
@@ -13,8 +14,6 @@ type CreateTask = {
 	due?: string;
 	externalLink?: string;
 };
-
-const prisma = new PrismaClient();
 
 export async function createTask(
 	formData: CreateTask

@@ -18,6 +18,7 @@ export default function TaskCard({
 	progress,
 	due,
 	priority,
+	externalLink,
 }: TaskCardProps) {
 	return (
 		<BorderContainer>
@@ -49,6 +50,11 @@ export default function TaskCard({
 					/>
 				</span>
 				{description && <p>{description}</p>}
+				{externalLink && (
+					<a href={externalLink} className="hover:underline">
+						{externalLink}
+					</a>
+				)}
 			</BasicContainer>
 
 			<ProgressBar

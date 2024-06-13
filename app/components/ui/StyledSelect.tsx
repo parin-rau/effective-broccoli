@@ -3,6 +3,7 @@ export type SelectProps = {
 	label: string;
 	options: { label: string; value: string }[];
 	style?: React.CSSProperties;
+	defaultValue?: string;
 };
 
 export default function StyledSelect({
@@ -10,6 +11,7 @@ export default function StyledSelect({
 	label,
 	name,
 	style,
+	defaultValue,
 }: SelectProps) {
 	return (
 		<div className="flex flex-col gap-1">
@@ -17,7 +19,7 @@ export default function StyledSelect({
 			<select
 				style={style}
 				name={name}
-				defaultValue={options[0].value}
+				defaultValue={defaultValue ?? options[0].value}
 				className="p-2 h-full border border-neutral-500 dark:border-neutral-600 rounded-md bg-neutral-100 dark:bg-neutral-900"
 			>
 				{options.map((option, index) => (

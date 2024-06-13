@@ -24,7 +24,7 @@ export default function TaskPage() {
 			{error && <ErrorBanner>{error}</ErrorBanner>}
 			{message && <MessageBanner>{message}</MessageBanner>}
 			{task && <TaskCard {...{ ...task }} />}
-			<Outlet />
+			<Outlet context={{ projectId: task?.project.projectId }} />
 		</BasicContainer>
 	);
 }

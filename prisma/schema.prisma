@@ -47,6 +47,7 @@ model Task {
   due String?
   externalLink String?
   timestamp BigInt
+  //tags Tag[]
   subtasks Subtask[]
 }
 
@@ -64,3 +65,10 @@ model Subtask {
   externalLink String?
   timestamp BigInt
 }
+
+// model Tag {
+//   id String @unique @id
+//   task Task @relation(fields: [taskId], references: [taskId])
+//   taskId String
+//   data String
+// }

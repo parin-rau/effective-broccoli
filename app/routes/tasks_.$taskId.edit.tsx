@@ -33,7 +33,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
 	});
 
 	return redirect(
-		data?.taskId ? `/tasks/${data.taskId}` : `/projects/${projectId}`
+		data?.taskId
+			? `/tasks/${data.taskId}/subtasks`
+			: `/projects/${projectId}`
 	);
 }
 
@@ -68,8 +70,8 @@ export default function EditTask() {
 								{...{
 									...data,
 									projectId: data.project.projectId,
-									priority: data.priority.value,
-									due: data.due.date,
+									priority: data.priority.value ?? 0,
+									due: data.due.value,
 								}}
 							/>
 						</DialogContainer>

@@ -25,6 +25,7 @@ export default function TaskEditor({
 	externalLink,
 	due,
 	projectId,
+	priority,
 }: Props) {
 	return (
 		<BasicContainer styles="gap-3">
@@ -59,6 +60,7 @@ export default function TaskEditor({
 				<StyledSelect
 					name="priority"
 					label="Priority"
+					defaultValue={String(priority)}
 					options={priorityOptions}
 				/>
 				<StyledInput

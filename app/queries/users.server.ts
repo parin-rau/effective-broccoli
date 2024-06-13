@@ -1,9 +1,8 @@
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { createHash, compareHash } from "../utils/hash";
 import crypto from "crypto";
 import { DataResponse } from "./utils/dataResponse";
-
-const prisma = new PrismaClient();
+import { prisma } from "prisma/prismaClient";
 
 export const userExists = async (
 	username: string

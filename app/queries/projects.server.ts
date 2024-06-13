@@ -1,10 +1,9 @@
-import { PrismaClient, Project } from "@prisma/client";
+import { Project } from "@prisma/client";
 import crypto from "crypto";
 import { processProjectData } from "./utils/dataProcessing";
 import { ProjectCardProps } from "~/components/item/itemTypes";
 import { DataResponse } from "./utils/dataResponse";
-
-const prisma = new PrismaClient();
+import { prisma } from "prisma/prismaClient";
 
 export async function createProject({
 	userId,

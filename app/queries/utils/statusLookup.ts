@@ -33,12 +33,22 @@ export function getTaskPriority(priorityCode: number, onHold?: boolean) {
 	}
 }
 
+function formatDateValue(d: Date) {
+	const [year, month, date] = [
+		String(d.getFullYear()).padStart(4, "0"),
+		String(d.getMonth() + 1).padStart(2, "0"),
+		String(d.getDate()).padStart(2, "0"),
+	];
+	return `${year}-${month}-${date}`;
+}
+
 export function getTaskDue(due?: string | null): {
 	styles: string;
+	value: string;
 	date: string;
 } {
 	if (!due) {
-		return { styles: "", date: "" };
+		return { styles: "", date: "", value: "" };
 	}
 
 	const currentDate = new Date();
@@ -47,23 +57,28 @@ export function getTaskDue(due?: string | null): {
 	const getDateStats = (d: Date) => [
 		d.getFullYear(),
 		d.getMonth(),
-		d.getDay(),
+		d.getDate(),
 		d.getTime(),
 	];
 
-	const [cYear, cMonth, cDay, cTime] = getDateStats(currentDate);
-	const [dYear, dMonth, dDay, dTime] = getDateStats(dueDate);
+	const [cYear, cMonth, cDate, cTime] = getDateStats(currentDate);
+	const [dYear, dMonth, dDate, dTime] = getDateStats(dueDate);
 
-	if (dTime < cTime) {
+	if (cTime > dTime + 1000 * 60 * 60 * 24) {
 		return {
-			styles: "text-red-500",
+			styles: "text-red-600 dark:text-red-500",
 			date: dueDate.toLocaleDateString("en-US", {
 				month: "numeric",
 				day: "numeric",
 			}),
+			value: formatDateValue(dueDate),
 		};
-	} else if (cYear === dYear && cMonth === dMonth && cDay === dDay) {
-		return { styles: "text-amber-500", date: "Today" };
+	} else if (cYear === dYear && cMonth === dMonth && cDate === dDate) {
+		return {
+			styles: "text-amber-600 dark:text-amber-500",
+			date: "Today",
+			value: formatDateValue(dueDate),
+		};
 	} else if (cYear !== dYear) {
 		return {
 			styles: "",
@@ -72,6 +87,7 @@ export function getTaskDue(due?: string | null): {
 				month: "numeric",
 				day: "numeric",
 			}),
+			value: formatDateValue(dueDate),
 		};
 	} else {
 		return {
@@ -80,6 +96,7 @@ export function getTaskDue(due?: string | null): {
 				month: "numeric",
 				day: "numeric",
 			}),
+			value: formatDateValue(dueDate),
 		};
 	}
 }
