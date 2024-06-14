@@ -7,7 +7,6 @@ export default function SubtaskCard({
 	title,
 	subtaskId,
 	progress,
-	timestamp,
 }: SubtaskCardProps) {
 	const fetcher = useFetcher();
 	return (

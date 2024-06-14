@@ -27,7 +27,7 @@ export function processProjectData(
 
 		totalSubtasks += totalSubtasksPerTask;
 		task.subtasks.forEach((subtask) => {
-			if (subtask.progress === 2) {
+			if (subtask.progress === 1) {
 				completedSubtasks += 1;
 				completedSubtasksPerTask += 1;
 			}
@@ -65,7 +65,7 @@ export function processTaskData(
 	const totalSubtasks = task?.subtasks?.length ?? 0;
 	const completedSubtasks =
 		task?.subtasks?.reduce((count, current) => {
-			if (current.progress === 2) {
+			if (current.progress === 1) {
 				return (count += 1);
 			} else {
 				return count;
@@ -74,13 +74,16 @@ export function processTaskData(
 	const processedSubtasks =
 		task?.subtasks?.map((subtask) => processSubtaskData(subtask)) ?? [];
 
+	const isCompleted =
+		completedSubtasks === totalSubtasks && totalSubtasks !== 0;
+
 	return {
 		...restTask,
 		project: {
 			projectId: task.project.projectId,
 			title: task.project.title,
 		},
-		due: getTaskDue(task.due),
+		due: getTaskDue(task.due, isCompleted),
 		priority: getTaskPriority(task.priority),
 		timestamp: toTimestampString(Number(task.timestamp)),
 		progress: {

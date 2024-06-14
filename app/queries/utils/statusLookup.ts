@@ -42,7 +42,10 @@ function formatDateValue(d: Date) {
 	return `${year}-${month}-${date}`;
 }
 
-export function getTaskDue(due?: string | null): {
+export function getTaskDue(
+	due?: string | null,
+	isCompleted?: boolean
+): {
 	styles: string;
 	value: string;
 	date: string;
@@ -66,7 +69,7 @@ export function getTaskDue(due?: string | null): {
 
 	if (cTime > dTime + 1000 * 60 * 60 * 24) {
 		return {
-			styles: "text-red-600 dark:text-red-500",
+			styles: isCompleted ? "" : "text-red-600 dark:text-red-500",
 			date: dueDate.toLocaleDateString("en-US", {
 				month: "numeric",
 				day: "numeric",
@@ -75,7 +78,7 @@ export function getTaskDue(due?: string | null): {
 		};
 	} else if (cYear === dYear && cMonth === dMonth && cDate === dDate) {
 		return {
-			styles: "text-amber-600 dark:text-amber-500",
+			styles: isCompleted ? "" : "text-amber-600 dark:text-amber-500",
 			date: "Today",
 			value: formatDateValue(dueDate),
 		};
