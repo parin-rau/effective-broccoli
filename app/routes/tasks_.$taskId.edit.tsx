@@ -59,7 +59,7 @@ export default function EditTask() {
 			{message && <MessageBanner>{message}</MessageBanner>}
 			{error && <ErrorBanner>{error}</ErrorBanner>}
 			{data?.taskId && (
-				<Form method="post" action={`/tasks/${data.taskId}/edit`}>
+				<Form method="patch" action={`/tasks/${data.taskId}/edit`}>
 					{data?.project.projectId && (
 						<DialogContainer
 							headerText="Editing Task"

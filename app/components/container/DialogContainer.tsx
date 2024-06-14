@@ -6,11 +6,12 @@ import SpreadContainer from "./SpreadContainer";
 
 type DialogProps = {
 	children: React.ReactNode;
-	openButtonText: string;
+	openButtonText: string | React.ReactNode;
 	closeButtonText: string;
 	headerText: string;
 	inlineButtons?: boolean;
 	smallWidth?: boolean;
+	transparentOpenButton?: boolean;
 };
 
 type CloseButtonProps = {
@@ -56,6 +57,7 @@ export default function DialogContainer({
 	headerText,
 	inlineButtons,
 	smallWidth,
+	transparentOpenButton,
 }: DialogProps) {
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const toggleDialog = () => {
@@ -69,7 +71,15 @@ export default function DialogContainer({
 
 	return (
 		<>
-			<StyledButton onClick={toggleDialog}>{openButtonText}</StyledButton>
+			{transparentOpenButton ? (
+				<TransparentButton onClick={toggleDialog}>
+					{openButtonText}
+				</TransparentButton>
+			) : (
+				<StyledButton onClick={toggleDialog}>
+					{openButtonText}
+				</StyledButton>
+			)}
 			<dialog
 				ref={dialogRef}
 				className={`${
