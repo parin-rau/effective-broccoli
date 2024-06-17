@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import BasicContainer from "~/components/container/BasicContainer";
@@ -8,6 +8,10 @@ import PageHeading from "~/components/text/PageHeading";
 import ErrorBanner from "~/components/ui/ErrorBanner";
 import MessageBanner from "~/components/ui/MessageBanner";
 import { getTasksByUserId } from "~/queries/tasks.server";
+
+export const meta: MetaFunction = () => {
+	return [{ title: "Tasks" }];
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await requireAuthCookie(request);

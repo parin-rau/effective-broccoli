@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import BasicContainer from "~/components/container/BasicContainer";
@@ -10,6 +10,10 @@ import DeleteUser from "./user.delete";
 import PageHeading from "~/components/text/PageHeading";
 import ErrorBanner from "~/components/ui/ErrorBanner";
 import ProgressBar from "~/components/item/ProgressBar";
+
+export const meta: MetaFunction = () => {
+	return [{ title: "User Info" }];
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	// Loader summary stats for user:

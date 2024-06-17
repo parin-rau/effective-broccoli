@@ -5,7 +5,7 @@ import BasicContainer from "~/components/container/BasicContainer";
 import DialogContainer from "~/components/container/DialogContainer";
 
 export const meta: MetaFunction = () => {
-	return [{ title: "Projects" }, { name: "app home", content: "app home" }];
+	return [{ title: "Home" }];
 };
 
 async function getHomeData() {

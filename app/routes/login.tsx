@@ -4,6 +4,7 @@ import TextInput from "../components/ui/TextInput";
 import {
 	ActionFunctionArgs,
 	LoaderFunctionArgs,
+	MetaFunction,
 	json,
 	redirect,
 } from "@remix-run/node";
@@ -15,6 +16,10 @@ import { validateLogin } from "~/utils/validate";
 import { authCookie } from "~/auth";
 import { loginUser } from "~/queries/users.server";
 import ErrorMessage from "~/components/ui/ErrorMessage";
+
+export const meta: MetaFunction = () => {
+	return [{ title: "Sign In" }];
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 	const formData = await request.formData();

@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useLoaderData, useOutletContext, useParams } from "@remix-run/react";
 import { json, redirect } from "react-router";
 import { requireAuthCookie } from "~/auth";
@@ -10,6 +10,19 @@ import CreateSubtask from "./subtasks.create";
 import SubtaskCard from "~/components/item/subtasks/SubtaskCard";
 import { SubtaskCardProps } from "~/components/item/itemTypes";
 import { DataResponse } from "~/queries/utils/dataResponse";
+import { loader as taskLoader } from "./tasks_.$taskId";
+
+export const meta: MetaFunction<
+	typeof loader,
+	{ "routes/tasks_.$taskId": typeof taskLoader }
+> = ({ matches }) => {
+	const task = matches.find(
+		(match) => match.id === "routes/tasks_.$taskId"
+	)?.data;
+	const projectTitle = task?.data?.project.title || "Project";
+	const taskTitle = task?.data?.title || "Task";
+	return [{ title: `${projectTitle} | ${taskTitle}` }];
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
 	const userId = await requireAuthCookie(request);

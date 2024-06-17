@@ -1,4 +1,9 @@
-import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
+import {
+	LoaderFunctionArgs,
+	MetaFunction,
+	json,
+	redirect,
+} from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import TaskTable from "~/components/item/tasks/TaskTable";
@@ -7,6 +12,18 @@ import ErrorBanner from "~/components/ui/ErrorBanner";
 import MessageBanner from "~/components/ui/MessageBanner";
 import { getTasksByProjectId } from "~/queries/tasks.server";
 import CreateTask from "./tasks.create";
+import { loader as projectLoader } from "./projects_.$projectId";
+
+export const meta: MetaFunction<
+	typeof loader,
+	{ "routes/projects_.$projectId": typeof projectLoader }
+> = ({ matches }) => {
+	const project = matches.find(
+		(match) => match.id === "routes/projects_.$projectId"
+	)?.data;
+	const projectTitle = project?.data?.title ?? "Project";
+	return [{ title: projectTitle }];
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
 	const userId = await requireAuthCookie(request);
