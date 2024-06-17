@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { DataResponse } from "./utils/dataResponse";
 import { prisma } from "prisma/prismaClient";
 import { getProgressStats } from "./utils/progressPercent";
+import { toTimestampString } from "./utils/dateConversion";
 
 export const userExists = async (
 	username: string
@@ -63,6 +64,7 @@ export const getUserStats = async (
 ): Promise<
 	DataResponse<{
 		username: string;
+		accountAge: string;
 		projects: ReturnType<typeof getProgressStats>;
 		tasks: ReturnType<typeof getProgressStats>;
 		subtasks: ReturnType<typeof getProgressStats>;
@@ -71,7 +73,7 @@ export const getUserStats = async (
 	const tx = await prisma.$transaction(async (prisma) => {
 		const user = await prisma.user.findFirst({
 			where: { userId },
-			select: { username: true },
+			select: { username: true, timestamp: true },
 		});
 
 		const projectCount = await prisma.project.count({ where: { userId } });
@@ -100,6 +102,10 @@ export const getUserStats = async (
 
 		return {
 			username: user?.username,
+			accountAge:
+				typeof user?.timestamp === "bigint"
+					? toTimestampString(Number(user?.timestamp))
+					: "a while ago",
 			projectCount,
 			completedProjectCount,
 			taskCount,
@@ -114,6 +120,7 @@ export const getUserStats = async (
 
 	const data = {
 		username: tx.username,
+		accountAge: tx.accountAge,
 		projects: getProgressStats(tx.completedProjectCount, tx.projectCount),
 		tasks: getProgressStats(tx.completedTaskCount, tx.taskCount),
 		subtasks: getProgressStats(tx.completedSubtaskCount, tx.subtaskCount),

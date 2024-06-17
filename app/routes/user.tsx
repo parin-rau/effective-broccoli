@@ -24,45 +24,37 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function UserPage() {
-	// edit/delete user buttons
-
 	const loaderData = useLoaderData<typeof loader>();
 	const data = loaderData.data;
 	const error = loaderData.error;
 
 	return (
 		<BasicContainer>
-			{error && <ErrorBanner>{error}</ErrorBanner>}
-			<PageHeading>User Info</PageHeading>
+			<BasicContainer>
+				{error && <ErrorBanner>{error}</ErrorBanner>}
+				<PageHeading>User Info</PageHeading>
+			</BasicContainer>
 
 			{data && (
 				<BorderContainer>
-					<SubHeading>Stats</SubHeading>
-					<span>Username: {data?.username}</span>
-					{/* <span>
-						Projects: {data?.projects.total ?? 0} Created,{" "}
-						{data?.projects.completed ?? 0} Completed
-					</span> */}
+					<BasicContainer>
+						<SubHeading>Overall Stats</SubHeading>
+						<span>Username: {data?.username}</span>
+						<span>Account created: {data?.accountAge}</span>
+					</BasicContainer>
+
 					<ProgressBar {...{ ...data.projects, uom: "Projects" }} />
-					{/* <span>
-						Tasks: {data?.tasks.total ?? 0} Created,{" "}
-						{data?.tasks.completed ?? 0} Completed
-					</span> */}
 					<ProgressBar {...{ ...data.tasks, uom: "Tasks" }} />
-					{/* <span>
-						Subtasks: {data?.subtasks.total ?? 0} Created,{" "}
-						{data?.subtasks.completed ?? 0} Completed
-					</span> */}
 					<ProgressBar {...{ ...data.subtasks, uom: "Subtasks" }} />
 				</BorderContainer>
 			)}
 
 			<BorderContainer>
-				<SubHeading>Settings</SubHeading>
-				<div className="flex flex-col gap-2">
+				<BasicContainer>
+					<SubHeading>Settings</SubHeading>
 					<EditUser />
 					<DeleteUser />
-				</div>
+				</BasicContainer>
 			</BorderContainer>
 		</BasicContainer>
 	);

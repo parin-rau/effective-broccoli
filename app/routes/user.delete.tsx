@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
-import { requireAuthCookie } from "~/auth";
+import { authCookie, requireAuthCookie } from "~/auth";
 import DialogContainer from "~/components/container/DialogContainer";
 import ErrorBanner from "~/components/ui/ErrorBanner";
 import MessageBanner from "~/components/ui/MessageBanner";
@@ -10,10 +10,17 @@ import { deleteUser } from "~/queries/users.server";
 export async function action({ request }: ActionFunctionArgs) {
 	const userId = await requireAuthCookie(request);
 	const { statusCode, ...response } = await deleteUser(userId);
-	if (statusCode !== 200) {
-		throw redirect();
+	if (![200, 204].includes(statusCode)) {
+		return json(response, statusCode);
+	} else {
+		return redirect("/login", {
+			headers: {
+				"Set-Cookie": await authCookie.serialize("", {
+					maxAge: 0,
+				}),
+			},
+		});
 	}
-	return json(response, statusCode);
 }
 
 export default function DeleteUser() {
@@ -25,7 +32,7 @@ export default function DeleteUser() {
 		<>
 			{error && <ErrorBanner>{error}</ErrorBanner>}
 			{message && <MessageBanner>{message}</MessageBanner>}
-			<Form method="post" action="/users/delete">
+			<Form method="post" action="/user/delete">
 				<DialogContainer
 					headerText="Delete Account"
 					openButtonText="Delete Account"
@@ -35,7 +42,11 @@ export default function DeleteUser() {
 						<span>
 							Are you sure you want to delete your account?
 						</span>
-						<span>This cannot be undone.</span>
+						<span>
+							This will also delete all projects, tasks, and
+							subtasks.
+						</span>
+						<span>This action cannot be undone.</span>
 					</WarningBanner>
 				</DialogContainer>
 			</Form>
