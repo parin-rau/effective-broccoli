@@ -92,6 +92,11 @@ export async function getSubtasksByProjectId({
 export async function getSubtasksByUserId(
 	userId: string
 ): Promise<DataResponse<SubtaskCardProps[]>> {
+	if (!userId)
+		return new DataResponse(
+			{ error: "No userId received with request." },
+			400
+		);
 	const subtasks = await prisma.subtask.findMany({
 		where: { userId },
 		orderBy: { timestamp: "asc" },

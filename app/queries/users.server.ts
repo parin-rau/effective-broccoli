@@ -5,6 +5,10 @@ import { DataResponse } from "./utils/dataResponse";
 import { prisma } from "prisma/prismaClient";
 import { getProgressStats } from "./utils/progressPercent";
 import { toTimestampString } from "./utils/dateConversion";
+import { ProjectCardProps, TaskCardProps } from "~/components/item/itemTypes";
+import { processProjectData, processTaskData } from "./utils/dataProcessing";
+
+// AUTH FUNCTIONS
 
 export const userExists = async (
 	username: string
@@ -57,75 +61,6 @@ export const loginUser = async (
 	return isPassMatch
 		? new DataResponse({ data: { userId: user.userId } })
 		: new DataResponse({ error: "Incorrect username/password" }, 400);
-};
-
-export const getUserStats = async (
-	userId: string
-): Promise<
-	DataResponse<{
-		username: string;
-		accountAge: string;
-		projects: ReturnType<typeof getProgressStats>;
-		tasks: ReturnType<typeof getProgressStats>;
-		subtasks: ReturnType<typeof getProgressStats>;
-	}>
-> => {
-	const tx = await prisma.$transaction(async (prisma) => {
-		const user = await prisma.user.findFirst({
-			where: { userId },
-			select: { username: true, timestamp: true },
-		});
-
-		const projectCount = await prisma.project.count({ where: { userId } });
-		const completedProjects = await prisma.project.findMany({
-			where: {
-				userId,
-				tasks: { every: { subtasks: { every: { progress: 1 } } } },
-			},
-			include: { _count: { select: { subtasks: true } } },
-		});
-		const completedProjectCount = completedProjects.filter(
-			(proj) => proj._count.subtasks > 0
-		).length;
-
-		const taskCount = await prisma.task.count({ where: { userId } });
-
-		const completedTaskCount = await prisma.task.count({
-			where: { userId, subtasks: { every: { progress: 1 } } },
-		});
-
-		const subtaskCount = await prisma.subtask.count({ where: { userId } });
-
-		const completedSubtaskCount = await prisma.subtask.count({
-			where: { userId, progress: 1 },
-		});
-
-		return {
-			username: user?.username,
-			accountAge:
-				typeof user?.timestamp === "bigint"
-					? toTimestampString(Number(user?.timestamp))
-					: "a while ago",
-			projectCount,
-			completedProjectCount,
-			taskCount,
-			completedTaskCount,
-			subtaskCount,
-			completedSubtaskCount,
-		};
-	});
-	if (!tx.username) {
-		return new DataResponse({ error: "Unable to find user." }, 400);
-	}
-
-	const data = {
-		username: tx.username,
-		accountAge: tx.accountAge,
-		projects: getProgressStats(tx.completedProjectCount, tx.projectCount),
-		tasks: getProgressStats(tx.completedTaskCount, tx.taskCount),
-		subtasks: getProgressStats(tx.completedSubtaskCount, tx.subtaskCount),
-	};
-	return new DataResponse({ data }, 200);
 };
 
 export const updateUser = async (
@@ -213,4 +148,113 @@ export const deleteUser = async (
 	return tx.user
 		? new DataResponse({ message: tx.message }, 204)
 		: new DataResponse({ error: tx.error }, 400);
+};
+
+// USER DATA SUMMARY FUNCTIONS
+
+export const getUserStats = async (
+	userId: string
+): Promise<
+	DataResponse<{
+		username: string;
+		accountAge: string;
+		projects: ReturnType<typeof getProgressStats>;
+		tasks: ReturnType<typeof getProgressStats>;
+		subtasks: ReturnType<typeof getProgressStats>;
+	}>
+> => {
+	const tx = await prisma.$transaction(async (prisma) => {
+		const user = await prisma.user.findFirst({
+			where: { userId },
+			select: { username: true, timestamp: true },
+		});
+
+		const projectCount = await prisma.project.count({ where: { userId } });
+		const completedProjects = await prisma.project.findMany({
+			where: {
+				userId,
+				tasks: { every: { subtasks: { every: { progress: 1 } } } },
+			},
+			include: { _count: { select: { subtasks: true } } },
+		});
+		const completedProjectCount = completedProjects.filter(
+			(proj) => proj._count.subtasks > 0
+		).length;
+
+		const taskCount = await prisma.task.count({ where: { userId } });
+
+		const completedTaskCount = await prisma.task.count({
+			where: { userId, subtasks: { every: { progress: 1 } } },
+		});
+
+		const subtaskCount = await prisma.subtask.count({ where: { userId } });
+
+		const completedSubtaskCount = await prisma.subtask.count({
+			where: { userId, progress: 1 },
+		});
+
+		return {
+			username: user?.username,
+			accountAge:
+				typeof user?.timestamp === "bigint"
+					? toTimestampString(Number(user?.timestamp))
+					: "a while ago",
+			projectCount,
+			completedProjectCount,
+			taskCount,
+			completedTaskCount,
+			subtaskCount,
+			completedSubtaskCount,
+		};
+	});
+	if (!tx.username) {
+		return new DataResponse({ error: "Unable to find user." }, 400);
+	}
+
+	const data = {
+		username: tx.username,
+		accountAge: tx.accountAge,
+		projects: getProgressStats(tx.completedProjectCount, tx.projectCount),
+		tasks: getProgressStats(tx.completedTaskCount, tx.taskCount),
+		subtasks: getProgressStats(tx.completedSubtaskCount, tx.subtaskCount),
+	};
+	return new DataResponse({ data }, 200);
+};
+
+export const getUserHomeView = async (
+	userId: string
+): Promise<
+	DataResponse<{ projects: ProjectCardProps[]; tasks: TaskCardProps[] }>
+> => {
+	const { recentProjects, recentTasks } = await prisma.$transaction(
+		async (prisma) => {
+			// 10 most recently created projects
+			const recentProjects = await prisma.project.findMany({
+				where: { userId },
+				include: {
+					tasks: {
+						select: { subtasks: { select: { progress: true } } },
+					},
+				},
+				take: 10,
+				orderBy: { timestamp: "desc" },
+			});
+			// 10 most recently created tasks
+			const recentTasks = await prisma.task.findMany({
+				where: { userId },
+				include: {
+					subtasks: true,
+					project: { select: { projectId: true, title: true } },
+				},
+				take: 10,
+				orderBy: { timestamp: "desc" },
+			});
+			return { recentProjects, recentTasks };
+		}
+	);
+	const data = {
+		projects: recentProjects.map((p) => processProjectData(p)),
+		tasks: recentTasks.map((t) => processTaskData(t)),
+	};
+	return new DataResponse({ data }, 200);
 };

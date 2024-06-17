@@ -57,6 +57,11 @@ export async function getProject({
 export async function getProjectsByUserId(
 	userId: string
 ): Promise<DataResponse<ProjectCardProps[]>> {
+	if (!userId)
+		return new DataResponse(
+			{ error: "No userId received with request" },
+			400
+		);
 	const projects = await prisma.project.findMany({
 		where: {
 			userId,

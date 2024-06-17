@@ -16,7 +16,7 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-	const { userId } = await requireAuthCookie(request);
+	const userId = await requireAuthCookie(request);
 	const { data, message, error, statusCode } = await getProjectsByUserId(
 		userId
 	);
@@ -37,12 +37,17 @@ export default function ProjectHome() {
 				<PageHeading>All Projects</PageHeading>
 				<NewProject />
 			</SpreadContainer>
-			<GridContainer>
-				{projects &&
-					projects.map((p) => (
+			{projects?.length ? (
+				<GridContainer>
+					{projects.map((p) => (
 						<ProjectCard key={p.projectId} {...p} />
 					))}
-			</GridContainer>
+				</GridContainer>
+			) : (
+				<BasicContainer>
+					<span>No projects to show yet...</span>
+				</BasicContainer>
+			)}
 		</BasicContainer>
 	);
 }

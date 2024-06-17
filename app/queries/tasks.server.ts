@@ -79,6 +79,11 @@ export async function getTasksByProjectId({
 export async function getTasksByUserId(
 	userId: string
 ): Promise<DataResponse<TaskCardProps[]>> {
+	if (!userId)
+		return new DataResponse(
+			{ error: "No userId received with request." },
+			400
+		);
 	const tasks = await prisma.task.findMany({
 		where: { userId },
 		include: {

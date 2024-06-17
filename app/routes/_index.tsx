@@ -2,55 +2,84 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import BasicContainer from "~/components/container/BasicContainer";
-import DialogContainer from "~/components/container/DialogContainer";
+import BorderContainer from "~/components/container/BorderContainer";
+import CollapsibleContainer from "~/components/container/CollapsibleContainer";
+import GridContainer from "~/components/container/GridContainer";
+import ProjectCard from "~/components/item/projects/ProjectCard";
+import TaskRow from "~/components/item/tasks/TaskRow";
+import TaskTable from "~/components/item/tasks/TaskTable";
+import NavbarLink from "~/components/navbar/NavbarLink";
+import PageHeading from "~/components/text/PageHeading";
+import SubHeading from "~/components/text/SubHeading";
+import ErrorBanner from "~/components/ui/ErrorBanner";
+import MessageBanner from "~/components/ui/MessageBanner";
+import { getUserHomeView } from "~/queries/users.server";
 
 export const meta: MetaFunction = () => {
 	return [{ title: "Home" }];
 };
 
-async function getHomeData() {
-	return json([
-		{ name: "test 1", value: 200 },
-		{ name: "test 2", value: 400 },
-	]);
-}
-
 export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await requireAuthCookie(request);
-	const res = await getHomeData(userId);
-	const views = await res.json();
-	return { views, userId };
-}
-
-function Views({ views }: { views: { name: string; value: number }[] }) {
-	return (
-		<div className="grid grid-cols-3">
-			{views.map((v, i) => (
-				<div key={i} className="flex flex-col">
-					<p>{v.name}</p>
-					<p>{v.value}</p>
-				</div>
-			))}
-		</div>
-	);
+	const { statusCode, ...response } = await getUserHomeView(userId);
+	return json(response, statusCode);
 }
 
 export default function IndexPage() {
-	const { views, userId } = useLoaderData<typeof loader>();
+	const loaderData = useLoaderData<typeof loader>();
+	const error = loaderData.error;
+	const message = loaderData.message;
+	const data = loaderData.data;
 
 	return (
 		<BasicContainer>
-			<h1 className="font-bold">Hi Mom!</h1>
-			<h2 className="italic">Test test test</h2>
-			<h3>{`userId: ${userId}`}</h3>
-			<DialogContainer
-				openButtonText="New Project"
-				closeButtonText="Cancel"
-				headerText="Create New Project"
+			<BasicContainer>
+				<PageHeading>Home</PageHeading>
+			</BasicContainer>
+			{error && <ErrorBanner>{error}</ErrorBanner>}
+			{message && <MessageBanner>{message}</MessageBanner>}
+			<CollapsibleContainer
+				title={<SubHeading>Recently Created Projects</SubHeading>}
+				defaultOpen={Boolean(data?.projects)}
 			>
-				{"I'm a modal"}
-			</DialogContainer>
-			<Views views={views} />
+				{data?.projects.length ? (
+					<GridContainer>
+						{data.projects.map((project) => (
+							<ProjectCard
+								key={project.projectId}
+								{...{ ...project }}
+							/>
+						))}
+					</GridContainer>
+				) : (
+					<BorderContainer>
+						<NavbarLink
+							to="/projects"
+							text="Go here to create your first project"
+						/>
+					</BorderContainer>
+				)}
+			</CollapsibleContainer>
+
+			<CollapsibleContainer
+				title={<SubHeading>Recently Created Tasks</SubHeading>}
+				defaultOpen={Boolean(data?.tasks)}
+			>
+				{data?.tasks.length ? (
+					<TaskTable>
+						{data.tasks.map((task) => (
+							<TaskRow key={task.taskId} {...{ ...task }} />
+						))}
+					</TaskTable>
+				) : (
+					<BorderContainer>
+						<NavbarLink
+							to="/projects"
+							text="Go here to create tasks for projects"
+						/>
+					</BorderContainer>
+				)}
+			</CollapsibleContainer>
 		</BasicContainer>
 	);
 }

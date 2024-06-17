@@ -2,8 +2,10 @@ import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import BasicContainer from "~/components/container/BasicContainer";
+import BorderContainer from "~/components/container/BorderContainer";
 import TaskRow from "~/components/item/tasks/TaskRow";
 import TaskTable from "~/components/item/tasks/TaskTable";
+import NavbarLink from "~/components/navbar/NavbarLink";
 import PageHeading from "~/components/text/PageHeading";
 import ErrorBanner from "~/components/ui/ErrorBanner";
 import MessageBanner from "~/components/ui/MessageBanner";
@@ -32,12 +34,20 @@ export default function TasksHome() {
 			<div className="p-2">
 				<PageHeading>All Tasks</PageHeading>
 			</div>
-			<TaskTable>
-				{tasks &&
-					tasks.map((task) => (
+			{tasks?.length ? (
+				<TaskTable>
+					{tasks.map((task) => (
 						<TaskRow key={task.taskId} {...{ ...task }} />
 					))}
-			</TaskTable>
+				</TaskTable>
+			) : (
+				<BorderContainer>
+					<NavbarLink
+						to="/projects"
+						text="No tasks to show yet. Go here to create tasks for projects."
+					/>
+				</BorderContainer>
+			)}
 		</BasicContainer>
 	);
 }
