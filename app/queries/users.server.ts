@@ -3,6 +3,7 @@ import { createHash, compareHash } from "../utils/hash";
 import crypto from "crypto";
 import { DataResponse } from "./utils/dataResponse";
 import { prisma } from "prisma/prismaClient";
+import { getProgressStats } from "./utils/progressPercent";
 
 export const userExists = async (
 	username: string
@@ -57,6 +58,69 @@ export const loginUser = async (
 		: new DataResponse({ error: "Incorrect username/password" }, 400);
 };
 
+export const getUserStats = async (
+	userId: string
+): Promise<
+	DataResponse<{
+		username: string;
+		projects: ReturnType<typeof getProgressStats>;
+		tasks: ReturnType<typeof getProgressStats>;
+		subtasks: ReturnType<typeof getProgressStats>;
+	}>
+> => {
+	const tx = await prisma.$transaction(async (prisma) => {
+		const user = await prisma.user.findFirst({
+			where: { userId },
+			select: { username: true },
+		});
+
+		const projectCount = await prisma.project.count({ where: { userId } });
+		const completedProjects = await prisma.project.findMany({
+			where: {
+				userId,
+				tasks: { every: { subtasks: { every: { progress: 1 } } } },
+			},
+			include: { _count: { select: { subtasks: true } } },
+		});
+		const completedProjectCount = completedProjects.filter(
+			(proj) => proj._count.subtasks > 0
+		).length;
+
+		const taskCount = await prisma.task.count({ where: { userId } });
+
+		const completedTaskCount = await prisma.task.count({
+			where: { userId, subtasks: { every: { progress: 1 } } },
+		});
+
+		const subtaskCount = await prisma.subtask.count({ where: { userId } });
+
+		const completedSubtaskCount = await prisma.subtask.count({
+			where: { userId, progress: 1 },
+		});
+
+		return {
+			username: user?.username,
+			projectCount,
+			completedProjectCount,
+			taskCount,
+			completedTaskCount,
+			subtaskCount,
+			completedSubtaskCount,
+		};
+	});
+	if (!tx.username) {
+		return new DataResponse({ error: "Unable to find user." }, 400);
+	}
+
+	const data = {
+		username: tx.username,
+		projects: getProgressStats(tx.completedProjectCount, tx.projectCount),
+		tasks: getProgressStats(tx.completedTaskCount, tx.taskCount),
+		subtasks: getProgressStats(tx.completedSubtaskCount, tx.subtaskCount),
+	};
+	return new DataResponse({ data }, 200);
+};
+
 export const updateUser = async (
 	userId: string,
 	data: Partial<User>
@@ -72,11 +136,74 @@ export const updateUser = async (
 		: new DataResponse({ error: "Unable to update user information" }, 400);
 };
 
+export const changePassword = async ({
+	userId,
+	oldPassword,
+	newPassword,
+	newPasswordConfirm,
+}: {
+	userId: string;
+	oldPassword: string;
+	newPassword: string;
+	newPasswordConfirm: string;
+}): Promise<DataResponse<{ success: boolean }>> => {
+	if (newPassword !== newPasswordConfirm) {
+		return new DataResponse(
+			{ error: "Entered passwords do not match." },
+			400
+		);
+	}
+	const user = await prisma.$transaction(async (prisma) => {
+		const currentUser = await prisma.user.findFirst({ where: { userId } });
+		if (!currentUser) return null;
+		const isPassMatch = compareHash(
+			currentUser.password,
+			oldPassword,
+			currentUser.passwordSalt
+		);
+		console.log({ isPassMatch });
+		if (!isPassMatch) return null;
+		const { hash: passwordHash, salt: passwordSalt } =
+			createHash(newPassword);
+		const updatedUser = await prisma.user.update({
+			where: { userId },
+			data: { password: passwordHash, passwordSalt },
+			select: { userId: true },
+		});
+		return updatedUser;
+	});
+
+	return user
+		? new DataResponse(
+				{
+					data: { success: Boolean(user) },
+					message: "Successfully updated password.",
+				},
+				200
+		  )
+		: new DataResponse({ error: "Unable to update password." }, 400);
+};
+
 export const deleteUser = async (
 	userId: string
 ): Promise<DataResponse<User>> => {
-	const user = await prisma.user.delete({ where: { userId } });
-	return user
-		? new DataResponse({ message: "User deleted" }, 204)
-		: new DataResponse({ error: "Unable to delete user" }, 400);
+	const tx = await prisma.$transaction(async (prisma) => {
+		const user = await prisma.user.delete({ where: { userId } });
+		if (!user) return { user: null, error: "Unable to delete user" };
+
+		const projects = await prisma.project.deleteMany({ where: { userId } });
+		const tasks = await prisma.task.deleteMany({ where: { userId } });
+		const subtasks = await prisma.subtask.deleteMany({ where: { userId } });
+
+		if (projects || tasks || subtasks) {
+			return {
+				user,
+				message: "Deleted user and all associated resources.",
+			};
+		}
+		return { user, message: "Deleted user." };
+	});
+	return tx.user
+		? new DataResponse({ message: tx.message }, 204)
+		: new DataResponse({ error: tx.error }, 400);
 };

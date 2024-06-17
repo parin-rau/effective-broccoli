@@ -34,3 +34,19 @@ export const validateLogin = (
 
 	return errors.length > 0 ? errors.join(" ") : null;
 };
+
+export const validatePassword = (
+	password?: string,
+	confirmPassword?: string
+) => {
+	const errors: string[] = [];
+	if (!password || !confirmPassword) {
+		errors.push("Missing required password input.");
+	}
+
+	if (password !== confirmPassword) {
+		errors.push("New passwords do not match.");
+	}
+
+	return errors.length > 0 ? errors.join(" ") : null;
+};

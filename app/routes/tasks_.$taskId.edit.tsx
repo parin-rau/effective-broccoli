@@ -4,7 +4,7 @@ import {
 	json,
 	redirect,
 } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import DialogContainer from "~/components/container/DialogContainer";
 import TaskEditor from "~/components/item/tasks/TaskEditor";
@@ -26,17 +26,15 @@ export async function action({ request, params }: ActionFunctionArgs) {
 	const due = String(formData.get("due"));
 	const projectId = String(formData.get("projectId"));
 
-	const { data } = await updateTask({
+	const { statusCode, ...response } = await updateTask({
 		userId,
 		taskId: params.taskId,
 		data: { title, description, externalLink, priority, due, projectId },
 	});
 
-	return redirect(
-		data?.taskId
-			? `/tasks/${data.taskId}/subtasks`
-			: `/projects/${projectId}`
-	);
+	return response.data?.taskId
+		? redirect(`/tasks/${response.data.taskId}/subtasks`)
+		: json(response, statusCode);
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -50,8 +48,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export default function EditTask() {
 	const loaderData = useLoaderData<typeof loader>();
-	const error = loaderData?.error;
-	const message = loaderData?.message;
+	const actionData = useActionData<typeof action>();
+	const error = loaderData?.error || actionData?.error;
+	const message = loaderData?.message || actionData?.message;
 	const data = loaderData?.data;
 
 	return (

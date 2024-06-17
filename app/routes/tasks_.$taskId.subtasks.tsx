@@ -2,7 +2,6 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useOutletContext, useParams } from "@remix-run/react";
 import { json, redirect } from "react-router";
 import { requireAuthCookie } from "~/auth";
-import BasicContainer from "~/components/container/BasicContainer";
 import SubtaskTable from "~/components/item/subtasks/SubtaskTable";
 import ErrorBanner from "~/components/ui/ErrorBanner";
 import MessageBanner from "~/components/ui/MessageBanner";
