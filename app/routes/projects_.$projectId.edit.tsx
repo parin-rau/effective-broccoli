@@ -31,7 +31,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 	return error
 		? json({ error }, statusCode)
-		: redirect(`/projects/${params.projectId}`);
+		: redirect(`/projects/${params.projectId}/tasks`);
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {

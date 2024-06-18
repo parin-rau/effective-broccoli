@@ -17,9 +17,7 @@ export default function SubtaskTable({
 				<div className="flex flex-row gap-2">{headerButtons}</div>
 			</SpreadContainer>
 
-			<div className="min-w-[400px] flex flex-col divide-y divide-neutral-600">
-				{children}
-			</div>
+			<div className="min-w-[400px] flex flex-col">{children}</div>
 		</BorderContainer>
 	);
 }

@@ -24,7 +24,7 @@ export async function action({ request }: ActionFunctionArgs) {
 	});
 
 	return data?.projectId
-		? redirect(`/projects/${data.projectId}`)
+		? redirect(`/projects/${data.projectId}/tasks`)
 		: json({ error }, statusCode);
 }
 

@@ -46,7 +46,7 @@ export default function TaskRow({
 				</div>
 
 				<Link
-					className="w-fit -ml-2 p-2 rounded-lg hover:text-blue-500 hover:bg-neutral-300 active:bg-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-700  dark:active:bg-neutral-600"
+					className="-ml-2 p-2 truncate rounded-lg hover:text-blue-500 hover:bg-neutral-300 active:bg-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-700  dark:active:bg-neutral-600"
 					to={`/projects/${project.projectId}/tasks`}
 				>
 					{project.title}

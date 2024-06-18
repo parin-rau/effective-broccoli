@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
-import { useActionData, useFetcher } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import { requireAuthCookie } from "~/auth";
 import DialogContainer from "~/components/container/DialogContainer";
 import SubtaskEditor from "~/components/item/subtasks/SubtaskEditor";
@@ -31,10 +31,9 @@ export default function CreateSubtask({
 	taskId: string;
 	projectId: string;
 }) {
-	const fetcher = useFetcher();
-	const actionData = useActionData<typeof action>();
-	const error = actionData?.error;
-	const message = actionData?.message;
+	const fetcher = useFetcher<typeof action>();
+	const error = fetcher.data?.error;
+	const message = fetcher.data?.message;
 
 	return (
 		<fetcher.Form method="post" action="/subtasks/create">
