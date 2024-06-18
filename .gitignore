@@ -4,6 +4,5 @@ node_modules
 /build
 .env
 
-migrations
 dev.db
 dev.db-journal
