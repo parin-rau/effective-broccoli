@@ -14,6 +14,7 @@ export default function TaskRow({
 	due,
 	priority,
 	project,
+	tags,
 }: TaskRowProps) {
 	return (
 		<div>
@@ -54,14 +55,7 @@ export default function TaskRow({
 				<span className="hidden lg:block italic">{timestamp}</span>
 
 				<div className="hidden md:block lg:col-span-2">
-					<TagCards
-						tags={[
-							"test",
-							"tag",
-							"overflow test",
-							"long tag placeholder",
-						]}
-					/>
+					<TagCards tags={tags} />
 				</div>
 			</div>
 		</div>

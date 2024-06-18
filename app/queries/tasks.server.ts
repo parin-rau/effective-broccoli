@@ -13,16 +13,27 @@ type CreateTask = {
 	priority?: number;
 	due?: string;
 	externalLink?: string;
+	tags: string[];
 };
 
 export async function createTask(
 	formData: CreateTask
 ): Promise<DataResponse<{ taskId?: string }>> {
+	const { tags, ...restForm } = formData;
+	const taskId = crypto.randomUUID();
 	const task = await prisma.task.create({
 		data: {
-			...formData,
-			taskId: crypto.randomUUID(),
+			...restForm,
+			taskId,
 			timestamp: Date.now(),
+			tags: {
+				create: tags.map((tag) => ({
+					id: crypto.randomUUID(),
+					taskId,
+					projectId: restForm.projectId,
+					content: tag,
+				})),
+			},
 		},
 	});
 	if (!task) {
@@ -49,6 +60,7 @@ export async function getTask({
 		include: {
 			subtasks: true,
 			project: { select: { projectId: true, title: true } },
+			tags: { select: { content: true } },
 		},
 	});
 	if (!task) {
@@ -70,6 +82,7 @@ export async function getTasksByProjectId({
 		include: {
 			subtasks: true,
 			project: { select: { projectId: true, title: true } },
+			tags: { select: { content: true } },
 		},
 	});
 	const processed = tasks.map((task) => processTaskData(task));
@@ -89,6 +102,7 @@ export async function getTasksByUserId(
 		include: {
 			subtasks: true,
 			project: { select: { projectId: true, title: true } },
+			tags: { select: { content: true } },
 		},
 	});
 	const processed = tasks.map((task) => processTaskData(task));
@@ -100,6 +114,7 @@ export async function getAllTasks(): Promise<DataResponse<TaskCardProps[]>> {
 		include: {
 			subtasks: true,
 			project: { select: { projectId: true, title: true } },
+			tags: { select: { content: true } },
 		},
 	});
 	const processed = tasks.map((task) => processTaskData(task));
@@ -114,11 +129,15 @@ export async function updateTask({
 	userId: string;
 	taskId: string;
 	data: Partial<Task>;
+	tags: string[];
 }): Promise<DataResponse<TaskCardProps>> {
 	const task = await prisma.task.update({
 		where: { userId, taskId },
 		data,
-		include: { project: { select: { projectId: true, title: true } } },
+		include: {
+			project: { select: { projectId: true, title: true } },
+			tags: { select: { content: true } },
+		},
 	});
 	const processed = processTaskData(task);
 	return new DataResponse({ data: processed }, 200);
@@ -131,15 +150,16 @@ export async function deleteTask({
 	userId: string;
 	taskId: string;
 }): Promise<DataResponse<TaskCardProps>> {
-	const [task, subtasks] = await prisma.$transaction([
+	const [task, subtasks, tags] = await prisma.$transaction([
 		prisma.task.delete({ where: { taskId, userId } }),
 		prisma.subtask.deleteMany({ where: { taskId, userId } }),
+		prisma.tag.deleteMany({ where: { taskId } }),
 	]);
 	if (!task) {
 		return new DataResponse({ error: "Task not deleted" }, 400);
-	} else if (subtasks) {
+	} else if (subtasks || tags) {
 		return new DataResponse(
-			{ message: "Task and all associated subtasks deleted" },
+			{ message: "Task and all related subtasks and/or tags deleted" },
 			200
 		);
 	} else {

@@ -3,6 +3,7 @@ import TextareaInput from "../../ui/TextareaInput";
 import TextInput from "../../ui/TextInput";
 import StyledInput from "~/components/ui/StyledInput";
 import StyledSelect, { SelectProps } from "~/components/ui/StyledSelect";
+import TagEditor from "./TagEditor";
 
 type Props = {
 	title?: string | null;
@@ -11,6 +12,7 @@ type Props = {
 	externalLink?: string | null;
 	due?: string | null;
 	projectId: string;
+	tags?: string[];
 };
 
 const priorityOptions: SelectProps["options"] = [
@@ -26,6 +28,7 @@ export default function TaskEditor({
 	due,
 	projectId,
 	priority,
+	tags,
 }: Props) {
 	return (
 		<BasicContainer styles="gap-3">
@@ -55,6 +58,7 @@ export default function TaskEditor({
 				defaultValue={externalLink ?? ""}
 				placeholder="Enter External Resource URL (Optional)"
 			/>
+			<TagEditor initValue={tags ?? []} />
 
 			<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 				<StyledSelect

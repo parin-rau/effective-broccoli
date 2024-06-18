@@ -245,6 +245,7 @@ export const getUserHomeView = async (
 				include: {
 					subtasks: true,
 					project: { select: { projectId: true, title: true } },
+					tags: true,
 				},
 				take: 10,
 				orderBy: { timestamp: "desc" },

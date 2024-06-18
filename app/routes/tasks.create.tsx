@@ -15,6 +15,7 @@ export async function action({ request }: ActionFunctionArgs) {
 	const priority = Number(formData.get("priority"));
 	const due = String(formData.get("due"));
 	const projectId = String(formData.get("projectId"));
+	const tags = String(formData.get("tags"));
 
 	const { data } = await createTask({
 		userId,
@@ -24,10 +25,13 @@ export async function action({ request }: ActionFunctionArgs) {
 		externalLink,
 		priority,
 		due,
+		tags: JSON.parse(tags),
 	});
 
 	return redirect(
-		data?.taskId ? `/tasks/${data.taskId}` : `/projects/${projectId}`
+		data?.taskId
+			? `/tasks/${data.taskId}/subtasks`
+			: `/projects/${projectId}/tasks`
 	);
 }
 

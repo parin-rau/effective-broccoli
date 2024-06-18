@@ -8,6 +8,7 @@ import ProgressBar from "../ProgressBar";
 import StatusDisplay from "~/components/ui/StatusDisplay";
 import ItalicText from "~/components/text/ItalicText";
 import BasicContainer from "~/components/container/BasicContainer";
+import TagCards from "./TagCards";
 
 export default function TaskCard({
 	taskId,
@@ -19,6 +20,7 @@ export default function TaskCard({
 	due,
 	priority,
 	externalLink,
+	tags,
 }: TaskCardProps) {
 	return (
 		<BorderContainer>
@@ -34,6 +36,7 @@ export default function TaskCard({
 			/>
 
 			<BasicContainer>
+				<TagCards tags={tags} />
 				<ItalicText>{timestamp}</ItalicText>
 				<Link
 					to={`/projects/${project.projectId}/tasks`}
