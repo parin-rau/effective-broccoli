@@ -60,7 +60,11 @@ export function processTaskData(
 	}
 ): TaskCardProps {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { userId, ...restTask } = task; // removing userId from task
+	const { userId, tags, ...restTask } = task; // removing userId from task
+
+	const parsedTags = Array.isArray(JSON.parse(tags))
+		? JSON.parse(tags)
+		: [JSON.parse(tags)];
 
 	const totalSubtasks = task?.subtasks?.length ?? 0;
 	const completedSubtasks =
@@ -97,6 +101,7 @@ export function processTaskData(
 			}),
 		},
 		subtasks: processedSubtasks,
+		tags: parsedTags,
 	};
 }
 

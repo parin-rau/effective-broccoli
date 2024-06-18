@@ -25,7 +25,7 @@ export async function action({ request }: ActionFunctionArgs) {
 		externalLink,
 		priority,
 		due,
-		tags: JSON.parse(tags),
+		tags,
 	});
 
 	return redirect(

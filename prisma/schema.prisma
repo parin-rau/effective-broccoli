@@ -47,6 +47,7 @@ model Task {
   due String?
   externalLink String?
   timestamp BigInt
+  tags String @default("[]") // JSON.stringified array of tags
   subtasks Subtask[]
 }
 

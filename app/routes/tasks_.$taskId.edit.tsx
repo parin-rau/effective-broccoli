@@ -25,11 +25,20 @@ export async function action({ request, params }: ActionFunctionArgs) {
 	const priority = Number(formData.get("priority"));
 	const due = String(formData.get("due"));
 	const projectId = String(formData.get("projectId"));
+	const tags = String(formData.get("tags"));
 
 	const { statusCode, ...response } = await updateTask({
 		userId,
 		taskId: params.taskId,
-		data: { title, description, externalLink, priority, due, projectId },
+		data: {
+			title,
+			description,
+			externalLink,
+			priority,
+			due,
+			projectId,
+			tags,
+		},
 	});
 
 	return response.data?.taskId

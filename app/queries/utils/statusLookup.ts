@@ -18,10 +18,22 @@ export function getTaskPriority(priorityCode: number, onHold?: boolean) {
 		string,
 		{ text: string; value: number; styles: string }
 	> = {
-		"-1": { text: "On Hold", value: -1, styles: "bg-purple-700" },
-		"0": { text: "Low", value: 0, styles: "bg-emerald-700" },
-		"1": { text: "Medium", value: 1, styles: "bg-amber-700" },
-		"2": { text: "High", value: 2, styles: "bg-red-700" },
+		"-1": {
+			text: "On Hold",
+			value: -1,
+			styles: "bg-purple-500 dark:bg-purple-700",
+		},
+		"0": {
+			text: "Low",
+			value: 0,
+			styles: "bg-green-500 dark:bg-green-700",
+		},
+		"1": {
+			text: "Medium",
+			value: 1,
+			styles: "bg-amber-500 dark:bg-amber-700",
+		},
+		"2": { text: "High", value: 2, styles: "bg-red-500 dark:bg-red-700" },
 	};
 
 	if (onHold) {

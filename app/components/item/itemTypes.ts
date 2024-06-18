@@ -31,6 +31,7 @@ export type TaskCardProps = {
 	priority: { value: number; text: string; styles: string };
 	subtasks?: SubtaskCardProps[];
 	progress: TaskCompletion;
+	tags: string[];
 };
 
 export type SubtaskCardProps = {
