@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { processProjectData } from "./utils/dataProcessing";
 import { ProjectCardProps } from "~/components/item/itemTypes";
 import { DataResponse } from "./utils/dataResponse";
-import { prisma } from "prisma/prismaClient";
+import { prisma } from "prisma/prismaClient.server";
 
 export async function createProject({
 	userId,

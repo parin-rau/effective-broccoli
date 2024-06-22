@@ -36,6 +36,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		username,
 		password
 	);
+
 	return data?.userId
 		? redirect("/", {
 				headers: {

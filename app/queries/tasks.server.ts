@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { processTaskData } from "./utils/dataProcessing";
 import { TaskCardProps } from "~/components/item/itemTypes";
 import { DataResponse } from "./utils/dataResponse";
-import { prisma } from "prisma/prismaClient";
+import { prisma } from "prisma/prismaClient.server";
 
 type CreateTask = {
 	userId: string;

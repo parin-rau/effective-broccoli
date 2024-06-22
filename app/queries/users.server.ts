@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 import { createHash, compareHash } from "../utils/hash";
 import crypto from "crypto";
 import { DataResponse } from "./utils/dataResponse";
-import { prisma } from "prisma/prismaClient";
+import { prisma } from "prisma/prismaClient.server";
 import { getProgressStats } from "./utils/progressPercent";
 import { toTimestampString } from "./utils/dateConversion";
 import { ProjectCardProps, TaskCardProps } from "~/components/item/itemTypes";

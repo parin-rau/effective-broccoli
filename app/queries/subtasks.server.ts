@@ -2,7 +2,7 @@ import { Subtask } from "@prisma/client";
 import { DataResponse } from "./utils/dataResponse";
 import { SubtaskCardProps } from "~/components/item/itemTypes";
 import { processSubtaskData } from "./utils/dataProcessing";
-import { prisma } from "prisma/prismaClient";
+import { prisma } from "prisma/prismaClient.server";
 
 export async function createSubtask({
 	title,
